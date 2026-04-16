@@ -1,0 +1,5 @@
+Instead of traitor traps being accessible through some magic innate ability, have an item named:
+Trap Control
+Trap Control is a SWEP that can activate traitor traps, either instantly, or on a timer. (Configurable by pressing reload. Configures in 10 second intervals, up to 120 seconds)
+Traps on a timer can either be activated instantly with left click, or cancelled with right click.
+Trap Control is visible to every player, so the serial killer has to hide when using it, or be certain that the trap will kill the intended victim. (Or leave them so heavily wounded its easy to finish the job)

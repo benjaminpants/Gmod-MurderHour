@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "gui/heartbeat_heart"
+	"$translucent" 1
+	$vertexcolor 1
+}

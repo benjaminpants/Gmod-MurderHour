@@ -1,0 +1,13 @@
+"superkillers"
+{
+	"base"		    "base"
+	"title"		    "Murder Hour"
+	"maps"		    "mdh_"
+	"category"	    "other"
+	"menusystem"	"1"
+
+	"settings"
+	{
+
+	}
+}
