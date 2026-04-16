@@ -2,7 +2,7 @@ SWEP.Base = "murdh_chargeweaponbase"
 
 SWEP.ViewModel = "models/weapons/cstrike/c_knife_t.mdl"
 SWEP.WorldModel = "models/weapons/w_knife_t.mdl"
-SWEP.Primary.ChargeTimes = {1,4,10}
+SWEP.Primary.ChargeTimes = {0.75,4,10}
 SWEP.UseHands = true
 SWEP.IsHolsterable = false
 SWEP.HoldType = "knife"
@@ -20,10 +20,6 @@ function SWEP:PrimaryChargeReleased(chargeTime, chargeLevel)
 	local endShootPos = shootPos + owner:GetAimVector() * 60
 
 	local trace = self:Trace(shootPos, endShootPos)
-
-	if (chargeLevel ~= 3) then
-		vm:SendViewModelMatchingSequence(vm:SelectWeightedSequence(ACT_VM_PRIMARYATTACK))
-	end
 
 	if (trace.Hit) then
 		if (SERVER) then
@@ -54,9 +50,11 @@ function SWEP:PrimaryChargeReleased(chargeTime, chargeLevel)
 				self:EmitSound("weapons/knife/knife_stab.wav", 50)
 				vm:SendViewModelMatchingSequence(vm:LookupSequence("stab"))
 			else
+				vm:SendViewModelMatchingSequence(vm:SelectWeightedSequence(ACT_VM_PRIMARYATTACK))
 				self:EmitSound("weapons/knife/knife_hit" .. math.random(1,4) .. ".wav", 30)
 			end
 		else
+			vm:SendViewModelMatchingSequence(vm:SelectWeightedSequence(ACT_VM_PRIMARYATTACK))
 			self:EmitSound("weapons/knife/knife_hitwall1.wav", 50)
 		end
 	else

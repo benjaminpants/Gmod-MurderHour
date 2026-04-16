@@ -6,13 +6,12 @@ SWEP.Primary.DefaultClip = 6
 SWEP.Primary.Automatic = false
 SWEP.Primary.Ammo = "Pistol"
 
-SWEP.Primary.Damage = 11
+SWEP.Primary.Damage = 10
 SWEP.Primary.BulletForce = 1
 SWEP.Primary.BulletCount = 1
 SWEP.Primary.Delay = 0.25
 SWEP.Primary.AmmoPerShot = 1
 SWEP.Primary.Spread = Vector(0.011,0.011,0)
-SWEP.Primary.BulletForce = 45
 SWEP.Primary.Sound = "weapons/usp/usp1.wav"
 SWEP.Primary.SoundLevel = 30
 SWEP.Primary.Recoil = Angle(-1,0,0)
