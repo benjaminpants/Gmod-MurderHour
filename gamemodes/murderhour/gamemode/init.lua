@@ -144,9 +144,9 @@ function GM:EntityTakeDamage(entity, info)
 		entity.heartBPM = entity.heartBPM + math.max(info:GetDamage() * 3,10)
 		entity.heartBPM = math.min(entity.heartBPM, ((entity.restingBPM * 3)) - 30)
 	end
+	local chanceThreshold = math.max(math.floor(info:GetDamage()*2),20)
 	if (info:IsDamageType(DMG_FALL)) then
 		// more damage = higher chance of breaking a leg
-		local chanceThreshold = math.max(math.floor(info:GetDamage()*2),20)
 		if (math.random(1, entity:Health()) <= chanceThreshold) then
 			entity:AddOrUpdateStatusEffect("left_leg_broken", info:GetDamage() * 10, 2)
 		end
@@ -159,13 +159,17 @@ function GM:EntityTakeDamage(entity, info)
 			entity:AddOrUpdateStatusEffect("blackout", 7, 1)
 		end*/
 	end
-
 	if (info:IsDamageType(DMG_SLASH)) then
 		local strengthToGive = 1
 		if (info:GetDamage() >= 25) then
 			strengthToGive = 2
 		end
 		entity:AddOrUpdateStatusEffect("bleed_steady", info:GetDamage() * 3, strengthToGive)
+	end
+	if (info:IsDamageType(DMG_SHOCK)) then
+		if (math.random(1, entity:Health()) <= chanceThreshold) then
+			entity:AddOrUpdateStatusEffect("blackout", info:GetDamage() / 2, 1)
+		end
 	end
 	if (not entity.supressDamageSound) then
 		if ((info:GetDamage() >= 25) or (entity:Health() <= 25)) then
