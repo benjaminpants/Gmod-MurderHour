@@ -22,7 +22,15 @@ end
 
 function GM:PlayerSpawn(ply)
 	ply:SetPlayerColor(Vector(math.random(), math.random(), math.random()))
-	ply:SetModel("models/player/Group01/male_07.mdl")
+	
+	local peekeys=table.GetKeys(GAMEMODE.PlayerModels)
+	local desiredModel=peekeys[math.random(1,#peekeys)]
+	local moreData=GAMEMODE.PlayerModels[desiredModel]
+	ply:SetModel(desiredModel)
+	local desiredApparel=moreData.AllowedBodyTextures[math.random(1,#moreData.AllowedBodyTextures)]
+	--ply:SetSubMaterial(moreData.ClothingIndex,GAMEMODE.PlayerApparel[desiredApparel]) --All my efforts wasted.
+	ply:SetNWString("Headwear","none")
+	
 	ply:SetWalkSpeed(100)
 	ply:SetSlowWalkSpeed(70)
 	ply:SetRunSpeed(200)

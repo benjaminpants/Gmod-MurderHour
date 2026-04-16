@@ -1,0 +1,16 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/humans/male/group03/players_sheet"
+	"$bumpmap" "models/humans/male/group03/citizen_sheet_normal" // thanks to LT_C and Bloocobalt!!
+	"$halflambert" "1"
+	
+	"$phong" "1"
+	"$phongexponent" "6"
+	"$phongboost" "0.3"
+	"$phongfresnelranges" "[0.05 0.3 0.5]"
+	
+	"$nocull" "1"
+
+	"$phongexponenttexture" "models/humans/male/group03/citizen_sheet_normal"
+	"$rimmask" "1"
+}

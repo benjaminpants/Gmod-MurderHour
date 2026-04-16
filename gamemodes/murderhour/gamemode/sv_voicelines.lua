@@ -12,7 +12,7 @@ local playerMeta = FindMetaTable("Player")
 
 function playerMeta:PlayRandomVoiceline(category, soundlevel, priority)
 	if (not gamemode.Call("PlayerShouldVoiceline", self)) then return end
-	local voicebank = GAMEMODE.Voicelines.Male // placeholder
+	local voicebank = GAMEMODE.Voicelines[self:GetPMInfo().Gender]
 	local potentialSounds = voicebank[category]
 	local chosenSound = potentialSounds[math.random(1, #potentialSounds)]
 	if (self.currentVoiceline ~= nil) then

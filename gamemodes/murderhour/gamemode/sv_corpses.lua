@@ -44,6 +44,8 @@ function playerMeta:CreateCorpse(dead, velMul)
 	ragdoll:SetNWVector("PlayerColor", self:GetPlayerColor())
 	ragdoll:SetNWBool("IsDead", dead)
 	ragdoll:SetNWBool("IsCorpse", true)
+	ragdoll:SetNWString("Headwear",self:GetNWString("Headwear"))
+	
 	/*net.Start("CorpseSpawned")
 	net.WriteEntity(ragdoll)
 	net.Broadcast()*/
