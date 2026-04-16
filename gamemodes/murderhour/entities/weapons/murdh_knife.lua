@@ -67,6 +67,8 @@ function SWEP:PrimaryChargeReleased(chargeTime, chargeLevel)
 	end
 
 	owner:LagCompensation(false)
+
+	owner:SetAnimation(PLAYER_ATTACK1)
 end
 
 function SWEP:PrimaryChargeLevelIncreased(chargeLevel)

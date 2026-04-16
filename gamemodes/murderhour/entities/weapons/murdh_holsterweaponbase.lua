@@ -2,8 +2,11 @@ AddCSLuaFile()
 SWEP.Base = "murdh_toolbase"
 SWEP.DefaultSwitchCooldown = 1
 
+DEFINE_BASECLASS(SWEP.Base)
+
 
 function SWEP:Initialize()
+	BaseClass.Initialize(self)
 	self:SetAttackFullyDown(true)
 	self:SetSwitchCooldown(CurTime())
 	self:SetNextPrimaryFire(CurTime())

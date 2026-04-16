@@ -1,4 +1,4 @@
-"superkillers"
+"murderhour"
 {
 	"base"		    "base"
 	"title"		    "Murder Hour"
