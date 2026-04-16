@@ -151,12 +151,11 @@ function SWEP:DoDamage(right, charge)
 			end
 		end
 
-		dmginfo:SetDamage( istable( dmg ) and math.random( dmg[ 1 ], dmg[ 2 ] ) or dmg )
-
-		dmginfo:SetDamagePosition( tr.HitPos )
+		dmginfo:SetDamage(dmg)
+		dmginfo:SetDamagePosition(tr.HitPos)
 
 		SuppressHostEvents(NULL)
-		tr.Entity:TakeDamageInfo( dmginfo )
+		tr.Entity:TakeDamageInfo(dmginfo)
 		SuppressHostEvents(owner)
 
 		if (tr.Entity:IsPlayer()) then
@@ -213,7 +212,7 @@ function SWEP:SwingFist(right)
 	self:EmitSound(self.SwingSound)
 end
 
-function SWEP:ChargeLevelIncreased(chargeLevel)
+function SWEP:PrimaryChargeLevelIncreased(chargeLevel)
 	if (CLIENT) then
 		self:EmitSound("physics/cardboard/cardboard_box_impact_soft7.wav", 30, 50 + (25 * chargeLevel), 1)
 	end

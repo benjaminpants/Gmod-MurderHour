@@ -96,7 +96,9 @@ function playerMeta:AddOrUpdateStatusEffect(id, time, strength)
 				end
 			end
 			if (strength ~= nil) then
-				v.strength = strength
+				if (strength > v.strength) then
+					v.strength = strength
+				end
 			end
 			gamemode.Call("CallStatusEffectFunction", self, v, "OnUpdated")
 			self:UpdateStatusEffect(v.uuid)

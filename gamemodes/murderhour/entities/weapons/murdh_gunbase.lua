@@ -6,18 +6,12 @@ SWEP.Primary.BulletForce = 1
 SWEP.Primary.BulletCount = 1
 SWEP.Primary.Delay = 1
 SWEP.Primary.AmmoPerShot = 1
-SWEP.HoldType = "normal"
 SWEP.Primary.Spread = Vector(0,0,0)
 SWEP.Primary.Sound = Sound("Weapon_Glock.Single")
 SWEP.Primary.SoundLevel = 75
-SWEP.Primary.BulletForce = 45
 SWEP.Primary.Recoil = Angle(0,0,0)
 
 DEFINE_BASECLASS(SWEP.Base)
-
-function SWEP:Initialize()
-	self:SetHoldType(self.HoldType)
-end
 
 function SWEP:PlayPrimaryFireSound()
 	self:EmitSound(self.Primary.Sound, self.Primary.SoundLevel)

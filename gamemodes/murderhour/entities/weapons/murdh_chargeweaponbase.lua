@@ -5,6 +5,7 @@ SWEP.Primary.ChargeTimes = {}
 SWEP.Primary.Charges = true
 SWEP.Secondary.ChargeTimes = {}
 SWEP.Secondary.Charges = false
+SWEP.IsHolsterable = true
 
 DEFINE_BASECLASS(SWEP.Base)
 
@@ -19,6 +20,9 @@ function SWEP:Initialize()
 	self:SetChargeStart(0)
 	self.Charging = 0
 	self:SetChargeLevel(0)
+	if (not self.IsHolsterable) then
+		self:SetAttackStance(true)
+	end
 end
 
 function SWEP:CancelCharge(forceRelease)
@@ -53,7 +57,11 @@ function SWEP:Think()
 		end
 		if (self:GetChargeLevel() ~= chargeLevel) then
 			self:SetChargeLevel(chargeLevel)
-			self:ChargeLevelIncreased(chargeLevel)
+			if (self.Charging == 2) then
+				self:SecondaryChargeLevelIncreased(chargeLevel)
+			else
+				self:PrimaryChargeLevelIncreased(chargeLevel)
+			end
 		end
 
 		if (((self.Charging == 1) and (self:GetOwner():KeyReleased(IN_ATTACK))) or ((self.Charging == 2) and (self:GetOwner():KeyReleased(IN_ATTACK2)))) then
@@ -96,11 +104,16 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:CanBeHolstered()
+	if (not self.IsHolsterable) then return false end
 	if (self:IsCharging()) then return false end
 	return BaseClass.CanBeHolstered(self)
 end
 
-function SWEP:ChargeLevelIncreased(chargeLevel)
+function SWEP:PrimaryChargeLevelIncreased(chargeLevel)
+
+end
+
+function SWEP:SecondaryChargeLevelIncreased(chargeLevel)
 
 end
 

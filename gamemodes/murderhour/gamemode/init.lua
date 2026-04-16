@@ -151,6 +151,14 @@ function GM:EntityTakeDamage(entity, info)
 			entity:AddOrUpdateStatusEffect("blackout", 7, 1)
 		end*/
 	end
+
+	if (info:IsDamageType(DMG_SLASH)) then
+		local strengthToGive = 1
+		if (info:GetDamage() >= 25) then
+			strengthToGive = 2
+		end
+		entity:AddOrUpdateStatusEffect("bleed_steady", info:GetDamage() * 3, strengthToGive)
+	end
 	if (not entity.supressDamageSound) then
 		if ((info:GetDamage() >= 25) or (entity:Health() <= 25)) then
 			self:PlayBigPainForPlayer(entity)
