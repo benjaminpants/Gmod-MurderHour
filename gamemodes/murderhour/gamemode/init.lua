@@ -10,6 +10,7 @@ util.AddNetworkString("PlayerHeartbeat")
 include("shared.lua")
 include("sv_voicelines.lua")
 include("sv_corpses.lua")
+include("sv_entityreplacer.lua")
 
 local playerMeta = FindMetaTable("Player")
 
