@@ -21,6 +21,7 @@ function SWEP:PrimaryChargeReleased(chargeTime, chargeLevel)
 
 	local trace = self:Trace(shootPos, endShootPos)
 
+	vm:SendViewModelMatchingSequence(vm:SelectWeightedSequence(ACT_VM_PRIMARYATTACK))
 	if (trace.Hit) then
 		if (SERVER) then
 			local dmginfo = DamageInfo()
@@ -50,11 +51,9 @@ function SWEP:PrimaryChargeReleased(chargeTime, chargeLevel)
 				self:EmitSound("weapons/knife/knife_stab.wav", 50)
 				vm:SendViewModelMatchingSequence(vm:LookupSequence("stab"))
 			else
-				vm:SendViewModelMatchingSequence(vm:SelectWeightedSequence(ACT_VM_PRIMARYATTACK))
 				self:EmitSound("weapons/knife/knife_hit" .. math.random(1,4) .. ".wav", 30)
 			end
 		else
-			vm:SendViewModelMatchingSequence(vm:SelectWeightedSequence(ACT_VM_PRIMARYATTACK))
 			self:EmitSound("weapons/knife/knife_hitwall1.wav", 50)
 		end
 	else
@@ -78,3 +77,12 @@ end
 function SWEP:Deploy()
 	self:EmitSound("weapons/knife/knife_deploy1.wav", 25)
 end
+
+hook.Add("StartCommand", "MHKnifeStartCommand", function(ply, cmd)
+	local activeWep = ply:GetActiveWeapon()
+	if (activeWep:GetClass() == "murdh_knife") then
+		if (activeWep:GetChargeLevel() == 3) then
+			cmd:SetButtons(bit.band(bit.bor(cmd:GetButtons(), IN_WALK), bit.bnot(IN_SPEED)))
+		end
+	end
+end)
