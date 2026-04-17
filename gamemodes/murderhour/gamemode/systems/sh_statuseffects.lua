@@ -206,6 +206,19 @@ function GM:SetupMove(ply, mv, cmd)
 	end
 end
 
+concommand.Add("murdh_debug_givestatuseffect", function(ply, cmd, args)
+	if (not SERVER) then return end
+	if (#args < 3) then return end
+	if (GAMEMODE.StatusEffects[args[1]] == nil) then return end
+	ply:AddOrUpdateStatusEffect(args[1], tonumber(args[2]), tonumber(args[3]))
+end, function(cmd, argStr, args)
+	local autoComplete = table.GetKeys(GAMEMODE.StatusEffects)
+	for i=1, #autoComplete do
+		autoComplete[i] = "murdh_debug_givestatuseffect " .. autoComplete[i]
+	end
+	return autoComplete
+end, nil, FCVAR_CHEAT)
+
 if (!SERVER) then return end
 
 // i dont know why these hooks dont work

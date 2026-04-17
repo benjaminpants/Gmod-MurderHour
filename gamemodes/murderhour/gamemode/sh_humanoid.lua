@@ -140,8 +140,9 @@ end
 hook.Add("PostPlayerDraw", "MurdH_Renderable_Player", function(ply)
 	if not IsValid(ply) then return end
 	local arenderable=ply:GetNWString("Headwear") --make render on bodies too pls
-	if arenderable~=nil and arenderable~="none" then
+	if arenderable ~= nil and arenderable ~= "none" then
 		local renderable=GAMEMODE.PlayerHeadwear[arenderable]
+		if (renderable == nil) then return end -- player is wearing invalid renderable
 		local offsetvec = renderable.PosOffset
 		local offsetang = renderable.AngOffset
 		local boneid = ply:LookupBone(renderable.Bone)

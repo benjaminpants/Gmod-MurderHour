@@ -50,8 +50,23 @@ net.Receive("PlayerUpdateStatusEffect", function()
 	// uuid cant/shouldnt be changed so no point in getting it here
 end)
 
-hook.Add("RenderScreenspaceEffects", "DrunkMotionBlur", function()
+local knockedOutMod = {
+	[ "$pp_colour_addr" ] = 0,
+	[ "$pp_colour_addg" ] = 0,
+	[ "$pp_colour_addb" ] = 0,
+	[ "$pp_colour_brightness" ] = 0,
+	[ "$pp_colour_contrast" ] = 0.025,
+	[ "$pp_colour_colour" ] = 10,
+	[ "$pp_colour_mulr" ] = 0,
+	[ "$pp_colour_mulg" ] = 0,
+	[ "$pp_colour_mulb" ] = 0
+}
+
+hook.Add("RenderScreenspaceEffects", "MHStatusEffectEffects", function()
 	if (LocalPlayer():GetStatusStrength("drunk") >= 4) then
-		//DrawMotionBlur(0.02, 1, 0.05)
+		DrawMotionBlur(0.02, 0.95, 0.05)
+	end
+	if (LocalPlayer():GetStatusStrength("blackout") > 1) then
+		DrawColorModify(knockedOutMod)
 	end
 end)

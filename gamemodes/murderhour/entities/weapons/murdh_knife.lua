@@ -2,10 +2,11 @@ SWEP.Base = "murdh_chargeweaponbase"
 
 SWEP.ViewModel = "models/weapons/cstrike/c_knife_t.mdl"
 SWEP.WorldModel = "models/weapons/w_knife_t.mdl"
-SWEP.Primary.ChargeTimes = {0.75,4,10}
+SWEP.Primary.ChargeTimes = {0.75,4,9,10}
 SWEP.UseHands = true
 SWEP.IsHolsterable = false
 SWEP.HoldType = "knife"
+SWEP.PrintName = "Knife"
 
 DEFINE_BASECLASS(SWEP.Base)
 
@@ -31,23 +32,25 @@ function SWEP:PrimaryChargeReleased(chargeTime, chargeLevel)
 
 			local calculateddmg = 3
 			if (chargeLevel == 1) then
-				calculateddmg = 6
-			elseif (chargeLevel == 2) then
 				calculateddmg = 10
+			elseif (chargeLevel == 2) then
+				calculateddmg = 12
 			elseif (chargeLevel == 3) then
+				calculateddmg = 17
+			elseif (chargeLevel == 4) then
 				calculateddmg = 35
 			end
 			dmginfo:SetDamageType(DMG_SLASH)
 
 			dmginfo:SetDamage(calculateddmg)
 			dmginfo:SetDamagePosition(trace.HitPos)
-			trace.Entity:TakeDamageInfo(dmginfo)
 			SuppressHostEvents(NULL)
+			trace.Entity:TakeDamageInfo(dmginfo)
 			self:PerformImpact(shootPos, DMG_SLASH, trace)
 			SuppressHostEvents(self:GetOwner())
 		end
-		if (trace.Entity:IsPlayer() or trace.Entity:IsNPC()) then
-			if (chargeLevel == 3) then
+		if (trace.Entity:IsPlayer() or trace.Entity:IsNPC() or trace.Entity:GetNWBool("IsCorpse")) then
+			if (chargeLevel == 4) then
 				self:EmitSound("weapons/knife/knife_stab.wav", 50)
 				vm:SendViewModelMatchingSequence(vm:LookupSequence("stab"))
 			else
@@ -58,7 +61,7 @@ function SWEP:PrimaryChargeReleased(chargeTime, chargeLevel)
 		end
 	else
 		self:EmitSound("weapons/knife/knife_slash" .. math.random(1,2) .. ".wav", 25)
-		if (chargeLevel == 3) then
+		if (chargeLevel == 4) then
 			vm:SendViewModelMatchingSequence(vm:LookupSequence("stab_miss"))
 		end
 	end
@@ -70,7 +73,7 @@ end
 
 function SWEP:PrimaryChargeLevelIncreased(chargeLevel)
 	if (CLIENT) then
-		self:EmitSound("weapons/knife/knife_deploy1.wav", 30, 75 + (25 * chargeLevel), 1)
+		self:EmitSound("weapons/knife/knife_deploy1.wav", 30, 50 + (25 * chargeLevel), 1)
 	end
 end
 
@@ -80,9 +83,13 @@ end
 
 hook.Add("StartCommand", "MHKnifeStartCommand", function(ply, cmd)
 	local activeWep = ply:GetActiveWeapon()
+	if (not IsValid(activeWep)) then return end
 	if (activeWep:GetClass() == "murdh_knife") then
-		if (activeWep:GetChargeLevel() == 3) then
-			cmd:SetButtons(bit.band(bit.bor(cmd:GetButtons(), IN_WALK), bit.bnot(IN_SPEED)))
+		if (activeWep:GetChargeLevel() >= 3) then
+			cmd:SetButtons(bit.band(cmd:GetButtons(), bit.bnot(IN_SPEED)))
+		end
+		if (activeWep:GetChargeLevel() == 4) then
+			cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_WALK))
 		end
 	end
 end)

@@ -21,7 +21,7 @@ end
 // TODO: move heart system to its own lua file, and rewrite the heart calculation stuff to be more modular so status effects like Energized and Drunk can affect it
 
 function GM:PlayerSpawn(ply)
-	ply:SetPlayerColor(Vector(math.random(), math.random(), math.random()))
+	ply:SetPlayerColor(HSLToColor(math.random(0,360), math.random(50,100) / 100, math.random(20,100) / 100):ToVector())
 	
 	local peekeys=table.GetKeys(GAMEMODE.PlayerModels)
 	local desiredModel=peekeys[math.random(1,#peekeys)]
@@ -131,10 +131,10 @@ function GM:EntityTakeDamage(entity, info)
 		// dead bodies shouldnt give pain to their hosts
 		if (entity:GetNWBool("IsDead")) then return true end
 		if (info:IsDamageType(DMG_CRUSH) and (info:GetInflictor():IsWorld())) then
-			info:ScaleDamage(0.2)
+			info:ScaleDamage(0.1)
 		end
 		// dont bother if its a small amount of health
-		if (info:GetDamage() <= 10) then return false end
+		//if (info:GetDamage() <= 5) then return false end
 		entity:GetNWEntity("Owner"):TakeDamageInfo(info)
 		return true
 	end

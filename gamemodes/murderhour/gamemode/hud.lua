@@ -33,6 +33,9 @@ local heartSize = 100
 local heartX = 0.05
 local heartY = 0.85
 
+local blackColor = Color(0,0,0)
+local whiteColor = Color(255,255,255)
+
 function easeOutBack(x)
 	local c1 = 1.70158;
 	local c3 = c1 + 1;
@@ -55,10 +58,26 @@ function HUD()
 	--local bgColor = HSLToColor(plHue,0.46,0.21)
 	
 	bgColor = plColor -- fix the missing color data
-	
+
 	local outlineSize = 6
+
 	local resHeartSize = (heartSize * resRefW)
+
+	// health
+
+	local healthR = client:Health() / client:GetMaxHealth()
+
+	surface.SetDrawColor(0,0,0)
+
+	local healthBarPosX = (ScrW() * heartX) - (resHeartSize / 2) - (12 * resRefW)
+	local healthBarPosY = (ScrH() * heartY) + (resHeartSize/2) + (16 * resRefH)
+
 	
+	surface.DrawRect(healthBarPosX - (outlineSize / 2),healthBarPosY - (outlineSize / 2),resHeartSize * 3 + outlineSize,32 * resRefH + outlineSize)
+	surface.SetDrawColor(bgColor:Unpack())
+	surface.DrawRect(healthBarPosX,healthBarPosY,resHeartSize * 3 * healthR,32 * resRefH)
+	draw.DrawText(client:Health(), "PrimaryHudFont",healthBarPosX + (resHeartSize * 1.5),healthBarPosY + (8 * resRefH), whiteColor, TEXT_ALIGN_CENTER)
+
 	surface.SetMaterial(heartMat)
 	surface.SetDrawColor(0,0,0)
 	surface.drawCenteredTexturedSquare(ScrW() * heartX, ScrH() * heartY, resHeartSize + outlineSize)
@@ -107,9 +126,12 @@ end
 
 hook.Add("HUDPaint","MurderHourDrawCustomHud", HUD)
 
-hook.Add( "HUDShouldDraw", "MurderHourHideHUD", function( name )
+hook.Add("HUDShouldDraw", "MHHideHUD", function( name )
 	if (name == "CHudWeaponSelection") then
 		--return false
+	end
+	if (name == "CHudHealth") then
+		return false
 	end
 end)
 
