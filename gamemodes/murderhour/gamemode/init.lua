@@ -4,9 +4,11 @@ AddCSLuaFile("systems/cl_statuseffects.lua")
 AddCSLuaFile("cl_corpses.lua")
 AddCSLuaFile("shared.lua")
 AddCSLuaFile("hud.lua")
+AddCSLuaFile("systems/cl_stats.lua")
 
 util.AddNetworkString("PlayerHeartbeat")
 
+include("systems/sv_stats.lua")
 include("shared.lua")
 include("sv_voicelines.lua")
 include("sv_corpses.lua")
@@ -46,6 +48,7 @@ function GM:PlayerSpawn(ply)
 	ply:ClearCorpse()
 	ply:ForceGive("murdh_hands")
 	ply:SilenceVoiceline()
+	ply:SetHunger(100)
 end
 
 include("systems/sv_heartbeat.lua")

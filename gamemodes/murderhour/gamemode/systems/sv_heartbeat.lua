@@ -35,8 +35,6 @@ function GM:HandleHeartbeat(ply)
 	end
 	local delta = FrameTime()
 	local restMult = 1 // the multiplier for resting, which is how we can go back to our normal heartrate
-	// if sprinting, slowly increase bpm
-
 	if (ply:GetAbsVelocity():Length2DSqr() >= 3) then
 		if (ply:IsWalking()) then
 			restMult = restMult * 0.8
@@ -49,6 +47,7 @@ function GM:HandleHeartbeat(ply)
 		restMult = restMult + 0.1
 	end
 
+	// if sprinting, slowly increase bpm
 	if (ply:IsSprinting()) then
 		if (not ply.wasSprintingLastTime) then
 			ply.wasSprintingLastTime = true
@@ -109,6 +108,7 @@ function GM:HandleHeartbeat(ply)
 		end
 		net.WriteFloat(dif)
 		net.Send(ply)
+		ply:AddHunger(-0.125)
 		if (ply:HasStatusEffect("left_leg_broken") or ply:HasStatusEffect("right_leg_broken")) then
 			if (ply:IsSprinting()) then
 				if (math.random(1,20) == 1) then
@@ -119,6 +119,7 @@ function GM:HandleHeartbeat(ply)
 		if (ply:Health() < ply:GetMaxHealth()) then
 			if (math.random(1,60) == 1) then
 				ply:SetHealth(ply:Health() + 1)
+				ply:AddHunger(-1)
 			end
 		end
 	end

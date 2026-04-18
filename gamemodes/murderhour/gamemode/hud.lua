@@ -67,16 +67,22 @@ function HUD()
 
 	local healthR = client:Health() / client:GetMaxHealth()
 
-	surface.SetDrawColor(0,0,0)
-
 	local healthBarPosX = (ScrW() * heartX) - (resHeartSize / 2) - (12 * resRefW)
 	local healthBarPosY = (ScrH() * heartY) + (resHeartSize/2) + (16 * resRefH)
+	local healthBarHeight = 32 * resRefH
 
-	
-	surface.DrawRect(healthBarPosX - (outlineSize / 2),healthBarPosY - (outlineSize / 2),resHeartSize * 3 + outlineSize,32 * resRefH + outlineSize)
+
+	surface.SetDrawColor(0,0,0)
+	surface.DrawRect(healthBarPosX - (outlineSize / 2),healthBarPosY - (outlineSize / 2),resHeartSize * 3 + outlineSize,healthBarHeight + outlineSize)
 	surface.SetDrawColor(bgColor:Unpack())
-	surface.DrawRect(healthBarPosX,healthBarPosY,resHeartSize * 3 * healthR,32 * resRefH)
+	surface.DrawRect(healthBarPosX,healthBarPosY,resHeartSize * 3 * healthR,healthBarHeight)
 	draw.DrawText(client:Health(), "PrimaryHudFont",healthBarPosX + (resHeartSize * 1.5),healthBarPosY + (8 * resRefH), whiteColor, TEXT_ALIGN_CENTER)
+	// hunger bar
+	surface.SetDrawColor(0,0,0)
+	surface.DrawRect(healthBarPosX - (outlineSize / 2),healthBarPosY - (outlineSize / 2) + (healthBarHeight + outlineSize),resHeartSize * 3 + outlineSize,(healthBarHeight / 2) + outlineSize)
+	surface.SetDrawColor(bgColor:Unpack())
+	surface.DrawRect(healthBarPosX,healthBarPosY + (healthBarHeight + outlineSize),resHeartSize * 3 * (client.hunger / 100),(healthBarHeight / 2))
+	draw.DrawText(math.ceil(client.hunger), "PrimaryHudFont",healthBarPosX + (resHeartSize * 1.5),healthBarPosY + (8 * resRefH) + ((healthBarHeight / 1.5) + outlineSize), whiteColor, TEXT_ALIGN_CENTER)
 
 	surface.SetMaterial(heartMat)
 	surface.SetDrawColor(0,0,0)
