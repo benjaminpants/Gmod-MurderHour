@@ -15,4 +15,12 @@ AngOffset=Angle(0,0,180), --Angular offset.
 Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
 }
 
+SWEP.WorldmodelRender=
+{
+Model="models/props_junk/GlassBottle01a.mdl", --Model to render.
+PosOffset=Vector(3,-1.3,-1.5), --Position offset.
+AngOffset=Angle(0,0,180), --Angular offset.
+Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
+}
+
 DEFINE_BASECLASS(SWEP.Base)

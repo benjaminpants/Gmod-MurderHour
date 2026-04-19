@@ -146,9 +146,11 @@ end
 
 
 function SWEP:DrawWorldModel(flags)
-	self:DrawModel(flags) --So the world model doesn't just vaporize.
-	if (self.UsesRenderableSystem~=true) then return end
-	if (self.WorldmodelRender==nil) then return end
-	local vm=self:GetOwner()
-	self:GeneralRenderFunction(vm,self.WorldmodelRender, flags)
+	if (not IsValid(self:GetOwner())) or (self.UsesRenderableSystem == false) then --If we're not using the render system, it's prob a bonemergable weapon so render it always.
+		self:DrawModel(flags) --So the world model doesn't just vaporize.
+	end
+	if (self.UsesRenderableSystem==true) and (self.WorldmodelRender~=nil) then
+		local vm=self:GetOwner()
+		self:GeneralRenderFunction(vm,self.WorldmodelRender, flags)
+	end
 end
