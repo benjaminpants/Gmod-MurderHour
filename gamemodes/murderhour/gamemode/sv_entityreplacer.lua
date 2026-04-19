@@ -30,7 +30,11 @@ GM.PropsToReplace = {
 	["models/props_junk/glassbottle01a.mdl"]={
 		entity="murdh_beer",
 		useOriginalModel=true
-	}
+	},
+	["models/props/cs_italy/orange.mdl"]={
+		entity="murdh_orange",
+		useOriginalModel=true
+	},
 }
 
 -- TODO: move these to hooks
