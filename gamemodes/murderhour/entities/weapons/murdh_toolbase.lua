@@ -112,7 +112,7 @@ function SWEP:Holster(wep) --Same reason as above why this doesn't check UsesRen
 	return true
 end
 
-function SWEP:GeneralRenderFunction(host,renderable) --Host is either the viewmodel or the character.
+function SWEP:GeneralRenderFunction(host,renderable, flags) --Host is either the viewmodel or the character.
 	if (self.UsesRenderableSystem~=true) then return end
 	if (not IsValid(host)) then return end --Host does not exist.
 	if (renderable == nil) then return end --Renderable does not exist.
@@ -134,18 +134,19 @@ function SWEP:GeneralRenderFunction(host,renderable) --Host is either the viewmo
 	modelexample:SetAngles( newang )
 	modelexample:SetupBones()
 	modelexample:DrawModel()
+	modelexample:
 	modelexample:Remove()
 end
 
 --The rendering nightmare--
-function SWEP:ViewModelDrawn(vm)
+function SWEP:ViewModelDrawn(vm, flags)
 	if (self.UsesRenderableSystem~=true) then return end
-	self:GeneralRenderFunction(vm,self.ViewmodelRender)
+	self:GeneralRenderFunction(vm,self.ViewmodelRender, flags)
 end
 
-function SWEP:DrawWorldModel()
-	self:DrawModel() --So the world model doesn't just vaporize.
+function SWEP:DrawWorldModel(flags)
+	self:DrawModel(flags) --So the world model doesn't just vaporize.
 	if (self.UsesRenderableSystem~=true) then return end
 	local vm=self:GetOwner()
-	self:GeneralRenderFunction(vm,self.ViewmodelRender)
+	self:GeneralRenderFunction(vm,self.ViewmodelRender, flags)
 end
