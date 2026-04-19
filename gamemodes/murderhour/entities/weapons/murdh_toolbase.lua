@@ -116,6 +116,7 @@ function SWEP:GeneralRenderFunction(host,renderable, flags) --Host is either the
 	if (self.UsesRenderableSystem~=true) then return end
 	if (not IsValid(host)) then return end --Host does not exist.
 	if (renderable == nil) then return end --Renderable does not exist.
+
 	local offsetvec = renderable.PosOffset
 	local offsetang = renderable.AngOffset
 	local boneid = host:LookupBone(renderable.Bone)
@@ -134,7 +135,6 @@ function SWEP:GeneralRenderFunction(host,renderable, flags) --Host is either the
 	modelexample:SetAngles( newang )
 	modelexample:SetupBones()
 	modelexample:DrawModel()
-	modelexample:
 	modelexample:Remove()
 end
 
@@ -144,9 +144,11 @@ function SWEP:ViewModelDrawn(vm, flags)
 	self:GeneralRenderFunction(vm,self.ViewmodelRender, flags)
 end
 
+
 function SWEP:DrawWorldModel(flags)
 	self:DrawModel(flags) --So the world model doesn't just vaporize.
 	if (self.UsesRenderableSystem~=true) then return end
+	if (self.WorldmodelRender==nil) then return end
 	local vm=self:GetOwner()
-	self:GeneralRenderFunction(vm,self.ViewmodelRender, flags)
+	self:GeneralRenderFunction(vm,self.WorldmodelRender, flags)
 end
