@@ -8,8 +8,8 @@ AddCSLuaFile("systems/cl_stats.lua")
 
 util.AddNetworkString("PlayerHeartbeat")
 
-include("systems/sv_stats.lua")
 include("shared.lua")
+include("systems/sv_stats.lua")
 include("sv_voicelines.lua")
 include("sv_corpses.lua")
 include("sv_entityreplacer.lua")

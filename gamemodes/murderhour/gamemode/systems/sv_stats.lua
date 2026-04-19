@@ -15,13 +15,6 @@ function playerMeta:SetHunger(hunger)
 	net.Send(self)
 end
 
-function playerMeta:GetHunger()
-	if (self.hunger == nil) then
-		self:SetHunger(100)
-	end
-	return self.hunger
-end
-
 function playerMeta:AddHunger(amount)
 	local toSet = math.max(self:GetHunger() + amount,0)
 	self:SetHunger(toSet)
