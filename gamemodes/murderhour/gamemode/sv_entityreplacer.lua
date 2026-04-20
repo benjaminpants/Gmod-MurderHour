@@ -31,8 +31,24 @@ GM.PropsToReplace = {
 		entity="murdh_beer",
 		useOriginalModel=true
 	},
+	["models/props_junk/garbage_glassbottle003a.mdl"]={
+		entity="murdh_beer",
+		useOriginalModel=false --I like the other one better as it's higher poly.
+	},
+	["models/props_junk/garbage_glassbottle001a.mdl"]={
+		entity="murdh_beerlarge",
+		useOriginalModel=true
+	},
+	["models/props_junk/garbage_glassbottle002a.mdl"]={ 
+		entity="murdh_beerlarge",
+		useOriginalModel=false --I'm just too lazy to adjust the rendering.
+	},
 	["models/props/cs_italy/orange.mdl"]={
 		entity="murdh_orange",
+		useOriginalModel=true
+	},
+	["models/props/cs_office/water_bottle.mdl"]={
+		entity="murdh_water",
 		useOriginalModel=true
 	},
 }
