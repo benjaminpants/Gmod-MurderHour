@@ -131,7 +131,6 @@ function SWEP:GeneralRenderFunction(host,renderable, flags) --Host is either the
 	if (self.UsesRenderableSystem~=true) then return end
 	if (not IsValid(host)) then return end --Host does not exist.
 	if (renderable == nil) then return end --Renderable does not exist.
-
 	local offsetvec = renderable.PosOffset
 	local offsetang = renderable.AngOffset
 	local boneid = host:LookupBone(renderable.Bone)
@@ -158,7 +157,6 @@ function SWEP:ViewModelDrawn(vm, flags)
 	if (self.UsesRenderableSystem~=true) then return end
 	self:GeneralRenderFunction(vm,self.ViewmodelRender, flags)
 end
-
 
 function SWEP:DrawWorldModel(flags)
 	if (not IsValid(self:GetOwner())) or (self.UsesRenderableSystem == false) then --If we're not using the render system, it's prob a bonemergable weapon so render it always.

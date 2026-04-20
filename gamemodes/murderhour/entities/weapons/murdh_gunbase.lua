@@ -9,12 +9,13 @@ SWEP.Primary.AmmoPerShot = 1
 SWEP.Primary.Spread = Vector(0,0,0)
 SWEP.Primary.Sound = Sound("Weapon_Glock.Single")
 SWEP.Primary.SoundLevel = 75
+SWEP.Primary.SoundPitch = 100
 SWEP.Primary.Recoil = Angle(0,0,0)
 
 DEFINE_BASECLASS(SWEP.Base)
 
 function SWEP:PlayPrimaryFireSound()
-	self:EmitSound(self.Primary.Sound, self.Primary.SoundLevel)
+	self:EmitSound(self.Primary.Sound, self.Primary.SoundLevel, self.Primary.SoundPitch)
 end
 
 function SWEP:PrimaryAttack()
