@@ -19,6 +19,7 @@ function SWEP:PrimaryAttack()
 		owner:SetHunger(math.min(owner:GetHunger()+self.HungerRestore,100))
 		self:OnConsume(owner)
 		owner:RemoveFromInventory(self)
+		owner:DropWeapon()
 		self:Remove()
 	end
 end

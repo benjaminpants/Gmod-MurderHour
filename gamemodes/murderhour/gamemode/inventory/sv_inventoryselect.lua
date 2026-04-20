@@ -10,6 +10,12 @@ local function DropHeldAndRemoveIfAppropiate(ply, wep)
 	end
 end
 
+local function HolsterWeaponIfExists(wep, newWep)
+	if (not IsValid(wep)) then return true end
+	if (wep.Holster == nil) then return true end
+	return wep:Holster(newWep)
+end
+
 net.Receive("InventorySelect", function(len, ply)
 	local inventory = ply.inventory
 	local entityToFind = NULL
@@ -24,13 +30,15 @@ net.Receive("InventorySelect", function(len, ply)
 	entityToFind = net.ReadEntity()
 	-- player selected hands/nothing
 	if (not IsValid(entityToFind)) then
-		if (not ply:GetActiveWeapon():Holster(ply:GetWeapon("murdh_hands"))) then return end
+		local hands = ply:GetWeapon("murdh_hands")
+		if (not HolsterWeaponIfExists(ply:GetActiveWeapon(), hands)) then return end
 		DropHeldAndRemoveIfAppropiate(ply, ply:GetActiveWeapon())
+		ply:SelectWeapon(hands)
 		return
 	end
 	if (entityToFind == ply:GetActiveWeapon()) then return end
 	if (not inventory:Contains(entityToFind)) then return end
-	if (not ply:GetActiveWeapon():Holster(entityToFind)) then return end
+	if (not HolsterWeaponIfExists(ply:GetActiveWeapon(), entityToFind)) then return end
 	DropHeldAndRemoveIfAppropiate(ply, ply:GetActiveWeapon())
 	ply:PickupWeapon(entityToFind)
 end)
