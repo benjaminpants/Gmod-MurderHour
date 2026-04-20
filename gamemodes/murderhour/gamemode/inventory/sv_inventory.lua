@@ -104,7 +104,7 @@ end
 
 hook.Add("PlayerDisconnected", "MHPDisconnectCleanup", function(ply)
 	if (not ply:HasInventory()) then return end
-    for k, v in ply.inventory.contents do
+    for k, v in ipairs(ply.inventory.contents) do
 		v:Remove()
 	end
 end)
