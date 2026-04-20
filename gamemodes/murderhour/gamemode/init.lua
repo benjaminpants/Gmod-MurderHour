@@ -27,7 +27,7 @@ end
 // TODO: move heart system to its own lua file, and rewrite the heart calculation stuff to be more modular so status effects like Energized and Drunk can affect it
 
 function GM:PlayerSpawn(ply)
-	ply:SetPlayerColor(HSLToColor(math.random(0,360), math.random(50,100) / 100, math.random(20,100) / 100):ToVector())
+	ply:SetPlayerColor(HSLToColor(math.random(0,360), math.random(90,100) / 100, math.random(20,100) / 100):ToVector())
 	
 	local peekeys=table.GetKeys(GAMEMODE.PlayerModels)
 	local desiredModel=peekeys[math.random(1,#peekeys)]

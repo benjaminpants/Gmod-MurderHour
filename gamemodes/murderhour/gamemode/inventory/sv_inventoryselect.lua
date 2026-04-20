@@ -24,11 +24,13 @@ net.Receive("InventorySelect", function(len, ply)
 	entityToFind = net.ReadEntity()
 	-- player selected hands/nothing
 	if (not IsValid(entityToFind)) then
+		if (not ply:GetActiveWeapon():Holster(ply:GetWeapon("murdh_hands"))) then return end
 		DropHeldAndRemoveIfAppropiate(ply, ply:GetActiveWeapon())
 		return
 	end
 	if (entityToFind == ply:GetActiveWeapon()) then return end
 	if (not inventory:Contains(entityToFind)) then return end
+	if (not ply:GetActiveWeapon():Holster(entityToFind)) then return end
 	DropHeldAndRemoveIfAppropiate(ply, ply:GetActiveWeapon())
 	ply:PickupWeapon(entityToFind)
 end)
