@@ -6,6 +6,12 @@ surface.CreateFont("PrimaryHudFont", {
 	weight = 500
 })
 
+
+surface.CreateFont("BiggerPrimaryHudFont", {
+	font = "Roboto",
+	size = 36,
+	weight = 500
+})
 local heartMat = Material("gui/heartbeat_heart")
 local heartBorderMat = Material("gui/heartbeat_heart_border")
 
@@ -134,7 +140,7 @@ hook.Add("HUDPaint","MurderHourDrawCustomHud", HUD)
 
 hook.Add("HUDShouldDraw", "MHHideHUD", function( name )
 	if (name == "CHudWeaponSelection") then
-		--return false
+		return false
 	end
 	if (name == "CHudHealth") then
 		return false
@@ -148,3 +154,5 @@ net.Receive("PlayerHeartbeat", function()
 	if (rawDif <= 0.1) then return end -- dont bother
 	EmitSound("player/heartbeat_noloop.wav", Vector(0,0,0), -1, CHAN_AUTO, rawDif)
 end)
+
+include("hud_weaponselector.lua")

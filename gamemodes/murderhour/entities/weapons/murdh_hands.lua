@@ -12,7 +12,7 @@ SWEP.HitSize = {
 	Max = Vector( 10, 10, 8 )
 }
 SWEP.HitDelay = 0.1
-
+SWEP.GoesInInventory = false
 SWEP.Primary.ChargeTimes = {0.5,1,2}
 
 SWEP.Base = "murdh_chargeweaponbase"
@@ -28,6 +28,7 @@ SWEP.Purpose = "The only things you can pick stuff up with! Press Reload to swit
 
 SWEP.Slot = 0
 SWEP.SlotPos = 0
+SWEP.Weight = 10000
 
 DEFINE_BASECLASS(SWEP.Base)
 

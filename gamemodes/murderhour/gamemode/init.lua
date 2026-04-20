@@ -4,12 +4,15 @@ AddCSLuaFile("systems/cl_statuseffects.lua")
 AddCSLuaFile("cl_corpses.lua")
 AddCSLuaFile("shared.lua")
 AddCSLuaFile("hud.lua")
+AddCSLuaFile("hud_weaponselector.lua")
 AddCSLuaFile("systems/cl_stats.lua")
+AddCSLuaFile("inventory/cl_inventory.lua")
 
 util.AddNetworkString("PlayerHeartbeat")
 
 include("shared.lua")
 include("systems/sv_stats.lua")
+include("inventory/sv_inventory.lua")
 include("sv_voicelines.lua")
 include("sv_corpses.lua")
 include("sv_entityreplacer.lua")
@@ -49,6 +52,7 @@ function GM:PlayerSpawn(ply)
 	ply:ForceGive("murdh_hands")
 	ply:SilenceVoiceline()
 	ply:SetHunger(100)
+	ply:AddInventory(3, {ply}, false)
 end
 
 include("systems/sv_heartbeat.lua")
@@ -225,12 +229,16 @@ end
 
 GM.WepBeingForceGived = false
 function GM:PlayerCanPickupWeapon(ply, wep)
+	if (wep:IsInInventory()) then return false end
 	if (ply:HasWeapon(wep:GetClass()) or (not self:AllowPlayerPickup(ply, wep))) then
 		GAMEMODE.WepBeingForceGived = false
 		return false
 	end
 	if (GAMEMODE.WepBeingForceGived == true) then
 		GAMEMODE.WepBeingForceGived = false
+		if (wep.GoesInInventory) then
+			return ply:AddToInventory(wep)
+		end
 		return true
 	end
 	return false
@@ -238,8 +246,12 @@ end
 
 function GM:PlayerSwitchWeapon(ply, oldWep, newWep)
 	if (oldWep.Pocketable == nil) then return end
-	if (oldWep.Pocketable == false) then
-		ply:DropWeapon(oldWep)
+	if (not oldWep.GoesInInventory) then return end
+	ply:DropWeapon(oldWep)
+	if (not oldWep.Pocketable) then
+		ply:RemoveFromInventory(oldWep)
+	else
+		oldWep:MakeInventoryIntangible()
 	end
 end
 

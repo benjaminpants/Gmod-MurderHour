@@ -16,6 +16,7 @@ SWEP.HoldType = "normal"
 
 SWEP.HullMins = Vector(-10, -10, 10)
 SWEP.HullMaxs = Vector(10,10,10)
+SWEP.GoesInInventory = true
 
 --Render options
 SWEP.UsesRenderableSystem = false --Should the tool use Bacon's nightmare rendering?
@@ -28,7 +29,6 @@ Bone = "ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
 }
 SWEP.WorldmodelRender = nil --For any good GMod rig this can just be the same as the viewmodel render if it's attached to the hand. --UsesRenderableSystem must be true.
 SWEP.HideWeaponModel=false --Can be used without UsesRenderableSystem being true, but why would you do that.
-
 
 function SWEP:Initialize()
 	self:SetHoldType(self.HoldType)

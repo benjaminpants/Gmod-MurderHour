@@ -10,6 +10,7 @@ function GM:DoPlayerDeath(ply, attacker, dmg)
 		return
 	end
 	ply:CreateCorpse(true, 1)
+	ply:DropEntireInventory()
 end
 
 function GM:PlayerDeath(victim, inflictor, attacker)
@@ -126,6 +127,7 @@ function playerMeta:Ragdollize(ragdollize)
 		self:CreateCorpse(false, 1)
 		self:DropObject()
 		// TODO: insert code to drop actively held weapon if its not pocketable, and if it is, try to pocket it.
+		self:DropInvWeapon(self:GetActiveWeapon())
 	else
 		local physBone = TryBonesUntilEscape(self:GetNWEntity("PlayerCorpse"), self)
 		local pos = nil

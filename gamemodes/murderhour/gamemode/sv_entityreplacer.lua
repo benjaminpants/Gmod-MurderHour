@@ -17,8 +17,16 @@ function GM:ReplaceAllEntites()
 			end
 			entity:SetPos(prop:GetPos())
 			entity:SetAngles(prop:GetAngles())
+			prop:SetCollisionGroup(COLLISION_GROUP_WORLD) -- prevent potential mess ups
 			prop:Remove()
 			entity:Spawn()
+
+			local physOb = prop:GetPhysicsObject()
+			if (physOb:IsAsleep()) then
+				entity:GetPhysicsObject():Sleep()
+			end
+			entity:SetName(prop:GetName())
+			prop:SetName("MHDELETING")
 		end
 	end
 	print(replaced .. " entities replaced!")

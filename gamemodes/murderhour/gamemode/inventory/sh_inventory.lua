@@ -1,0 +1,45 @@
+MHInventory = {}
+MHInventory.__index = MHInventory
+RegisterMetaTable("MHInventory", MHInventory)
+
+local entityMeta = FindMetaTable("Entity")
+
+function entityMeta:HasInventory()
+	return self.inventory ~= nil
+end
+
+function entityMeta:IsInInventory()
+	return (self._inInventory == true) // nil != true so this makes it return false if its nil
+end
+
+function entityMeta:MakeInventoryIntangible()
+	self:AddEffects(EF_NODRAW)
+	self:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE) -- might as well not exist!
+	self:CollisionRulesChanged()
+
+	local physOb = self:GetPhysicsObject()
+	if (not IsValid(physOb)) then return end
+	physOb:EnableMotion(false)
+end
+
+function MHInventory:new(limit)
+	local tab = {
+		contents = {}, -- list of Entities or classnames
+		owners = {}, -- player list
+		networkToOwnersOnly = true,
+		limit=math.min(limit or 255,255)
+	}
+	setmetatable(tab, MHInventory)
+	return tab
+end
+
+function MHInventory:Contains(entity)
+	for k, v in ipairs(self.contents) do
+		if (v == entity) then
+			return true
+		end
+	end
+	return false
+end
+
+setmetatable(MHInventory, {__call = MHInventory.new})

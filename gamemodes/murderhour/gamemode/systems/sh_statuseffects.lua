@@ -96,8 +96,12 @@ GM.StatusEffects = {
 		hidden_client=true
 	},
 	blackout = {
-		OnAdd = function(ply, _)
+		OnAdd = function(ply, effectData)
 			ply:Ragdollize(true)
+			-- visually simulate death if we are dying
+			if (effectData.strength >= 3) then
+				ply:DropEntireInventory()
+			end
 		end,
 		OnRemove = function(ply, effectData)
 			if (not ply:Alive()) then return end
