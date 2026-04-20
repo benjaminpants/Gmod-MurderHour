@@ -52,9 +52,11 @@ function HUD()
 end
 
 local function ChangeSelectedSlot(setTo)
+	local inv = LocalPlayer().inventory
+	if (inv == nil) then return end
 	selectTime = 2
 	selectedSlot = setTo
-	selectedSlot = math.min(math.max(selectedSlot,1),4)
+	selectedSlot = math.min(math.max(selectedSlot,1),inv.limit + 1)
 end
 
 local function Select()
@@ -72,6 +74,7 @@ end
 
 local function PlaySelectSound(ply)
 	local inventory = LocalPlayer().inventory
+	if (inventory == nil) then return end
 	if (selectedSlot > inventory.limit) then
 		ply:EmitSound("Player.WeaponSelectionMoveSlot")
 		return
