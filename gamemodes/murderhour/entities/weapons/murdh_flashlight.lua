@@ -17,6 +17,7 @@ function SWEP:Deploy()
 end
 
 function SWEP:Holster()
+	BaseClass.Holster(self)
 	if (not SERVER) then return end
 	self:GetOwner():AllowFlashlight(true)
 	self:GetOwner():Flashlight(false)

@@ -8,3 +8,7 @@ include("cl_corpses.lua")
 hook.Add("InitPostEntity", "MHDoNetworkHack", function()
 	LocalPlayer():ConCommand("murdh_forcenetworkrefresh")
 end)
+
+function GM:HUDDrawPickupHistory()
+	-- fuck you
+end

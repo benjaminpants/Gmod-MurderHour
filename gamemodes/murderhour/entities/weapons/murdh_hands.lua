@@ -263,6 +263,7 @@ function SWEP:Think()
 		self:SetNextMeleeAttack(0)
 	end
 	local vm = self:GetOwner():GetViewModel()
+	vm:RemoveEffects(EF_NODRAW)
 	if (self:GetAttackFullyDown() == false) then
 		if (vm:IsSequenceFinished()) then
 			self:SetAttackFullyDown(true)

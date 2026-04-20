@@ -15,11 +15,12 @@ SWEP.ThirstRestore=0
 if SERVER then
 function SWEP:PrimaryAttack()
 	if (not IsFirstTimePredicted()) then return end
-	local Owner=self:GetOwner()
-	Owner:SetHunger(math.min(Owner:GetHunger()+self.HungerRestore,100))
-	self:OnConsume(Owner)
-	self:Remove()
-end
+		local owner=self:GetOwner()
+		owner:SetHunger(math.min(owner:GetHunger()+self.HungerRestore,100))
+		self:OnConsume(owner)
+		owner:RemoveFromInventory(self)
+		self:Remove()
+	end
 end
 
 

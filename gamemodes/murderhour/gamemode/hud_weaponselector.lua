@@ -70,16 +70,30 @@ local function Select()
 	net.SendToServer()
 end
 
+local function PlaySelectSound(ply)
+	local inventory = LocalPlayer().inventory
+	if (selectedSlot > inventory.limit) then
+		ply:EmitSound("Player.WeaponSelectionMoveSlot")
+		return
+	end
+	if (selectedSlot > #inventory.contents) then
+		ply:EmitSound("Player.WeaponSelectionMoveSlot")
+		return
+	end
+	if (not IsValid(inventory.contents[selectedSlot])) then return end
+	ply:EmitSound(inventory.contents[selectedSlot]:GetSelectSound(), 75, 100, 0.15)
+end
+
 hook.Add("HUDPaint","MurderHourDrawCustomWeaponSelector", HUD)
 
 hook.Add( "PlayerBindPress", "MHWeaponSelectBind", function(ply, bind, pressed)
 	if (bind == "invprev") then
 		ChangeSelectedSlot(selectedSlot - 1)
-		ply:EmitSound("Player.WeaponSelectionMoveSlot")
+		PlaySelectSound(ply)
 	end
 	if (bind == "invnext") then
 		ChangeSelectedSlot(selectedSlot + 1)
-		ply:EmitSound("Player.WeaponSelectionMoveSlot")
+		PlaySelectSound(ply)
 	end
 	if ((bind == "+attack") and (selectTime > 0)) then
 		ply:EmitSound("Player.WeaponSelected")

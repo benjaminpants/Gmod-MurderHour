@@ -13,6 +13,7 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
 SWEP.Pocketable = true
 SWEP.HoldType = "normal"
+SWEP.SelectSoundOverride = nil
 
 SWEP.HullMins = Vector(-10, -10, 10)
 SWEP.HullMaxs = Vector(10,10,10)
@@ -32,6 +33,20 @@ SWEP.HideWeaponModel=false --Can be used without UsesRenderableSystem being true
 
 function SWEP:Initialize()
 	self:SetHoldType(self.HoldType)
+	if (self.SelectSoundOverride ~= nil) then return end
+	local physOb = self:GetPhysicsObject()
+	if (not IsValid(physOb)) then return end
+	self:SetNWString("WeaponSelect", util.GetSurfaceData(util.GetSurfaceIndex(physOb:GetMaterial())).impactSoftSound)
+end
+
+function SWEP:GetSelectSound()
+	if (self.SelectSoundOverride ~= nil) then return self.SelectSoundOverride end
+	if (self:GetNWString("WeaponSelect") == nil) then return "Player.WeaponSelectionMoveSlot" end
+	local sndScript = sound.GetProperties(self:GetNWString("WeaponSelect"))
+	if (type(sndScript.sound) == "table") then
+		return sndScript.sound[math.random(1, #sndScript.sound)]
+	end
+	return sndScript.sound
 end
 
 function SWEP:PrimaryAttack()
