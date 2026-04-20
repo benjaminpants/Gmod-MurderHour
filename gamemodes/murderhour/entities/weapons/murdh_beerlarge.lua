@@ -23,4 +23,8 @@ AngOffset=Angle(-15,0,210), --Angular offset.
 Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
 }
 
+function SWEP:OnConsume(Owner)
+	Owner:AddOrUpdateStatusEffect("drunk", 120, math.min(Owner:GetStatusStrength("drunk")+2,5))
+end
+
 DEFINE_BASECLASS(SWEP.Base)

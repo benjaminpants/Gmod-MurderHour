@@ -22,5 +22,6 @@ AngOffset=Angle(0,0,0), --Angular offset.
 Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
 }
 
+SWEP.HungerRestore=8
 
 DEFINE_BASECLASS(SWEP.Base)

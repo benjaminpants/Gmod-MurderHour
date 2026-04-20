@@ -37,7 +37,9 @@ function SWEP:PrimaryAttack()
 			self:PrimaryBulletCallback(attack, trace, dmgInfo)
 		end
 	})
-	owner:ViewPunch(self.Primary.Recoil * (math.random(1,20) / 20))
+	if owner:IsPlayer() then
+		owner:ViewPunch(self.Primary.Recoil * (math.random(1,20) / 20))
+	end
 	self:PlayPrimaryFireSound()
 	self:DoShootEffects()
 	self:TakePrimaryAmmo(self.Primary.AmmoPerShot)
@@ -55,3 +57,21 @@ end
 function SWEP:PrimaryBulletCallback(attack, trace, dmgInfo)
 
 end
+
+--NPC patches--
+function SWEP:GetNPCBulletSpread(Accuracy)
+	local SucksToSuckModifier=((Accuracy+1)/5)-1
+	local Refined=(1+SucksToSuckModifier)
+	return (self.Primary.Spread.x*Refined)-SucksToSuckModifier
+end
+
+function SWEP:GetNPCBurstSettings()
+	return self.Primary.ClipSize/2, self.Primary.ClipSize, self.Primary.Delay*2
+end
+
+--[[
+function SWEP:NPCShoot_Primary() --Manual shoot cooldown override. (dysfunctional)
+	self:PrimaryAttack()
+	self:GetOwner():SetSaveValue("m_flNextAttack",2)
+end
+]]
