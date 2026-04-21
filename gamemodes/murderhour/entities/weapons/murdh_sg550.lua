@@ -6,7 +6,7 @@ SWEP.Primary.DefaultClip = 20
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "Pistol"
 
-SWEP.Primary.Damage = 8
+SWEP.Primary.Damage = 11
 SWEP.Primary.BulletCount = 1
 SWEP.Primary.Delay = 0.2
 SWEP.Primary.AmmoPerShot = 1
