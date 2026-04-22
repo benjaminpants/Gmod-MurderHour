@@ -18,7 +18,7 @@ SWEP.Primary.Recoil = Angle(-1.5,0,0)
 SWEP.PrintName = "MP7"
 SWEP.Purpose = "Light submachine gun with an extendable stock and folding grip."
 SWEP.HoldType = "ar2"
-SWEP.CSMuzzleFlashes = true
+SWEP.CSMuzzleFlashes = false
 
 SWEP.ViewModel = "models/weapons/c_smg1.mdl"
 SWEP.WorldModel = "models/weapons/w_smg1.mdl"
