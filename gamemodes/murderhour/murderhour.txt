@@ -8,6 +8,13 @@
 
 	"settings"
 	{
-
+		1
+		{
+			"name"	"sv_defaultdeployspeed"
+			"text"	"Deploy Speed"
+			"type"	"Numeric"
+			"default" "1"
+			"dontcreate"	"1"
+		}
 	}
 }

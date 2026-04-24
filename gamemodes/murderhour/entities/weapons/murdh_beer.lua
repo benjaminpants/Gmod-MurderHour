@@ -6,6 +6,7 @@ SWEP.WorldModel = "models/props_junk/GlassBottle01a.mdl"
 SWEP.UseHands = true
 SWEP.PrintName = "Beer"
 SWEP.Purpose = "Drink away your problems. Calms your heart rate, don't overdose."
+SWEP.Breakable = true
 
 SWEP.ViewmodelRender = 
 {

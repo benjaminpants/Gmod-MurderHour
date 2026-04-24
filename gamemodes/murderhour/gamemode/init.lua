@@ -179,6 +179,11 @@ function GM:EntityTakeDamage(entity, info)
 			entity:AddOrUpdateStatusEffect("blackout", info:GetDamage() / 2, 1)
 		end
 	end
+	if (info:IsDamageType(DMG_CRUSH)) then
+		if (math.random(1, entity:Health() * 3) <= chanceThreshold) then
+			entity:AddOrUpdateStatusEffect("blackout", math.min(info:GetDamage()*3,75), 2)
+		end
+	end
 	if (not entity.supressDamageSound) then
 		if ((info:GetDamage() >= 25) or (entity:Health() <= 25)) then
 			self:PlayBigPainForPlayer(entity)

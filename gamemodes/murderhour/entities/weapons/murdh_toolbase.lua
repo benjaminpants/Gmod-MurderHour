@@ -18,6 +18,7 @@ SWEP.SelectSoundOverride = nil
 SWEP.HullMins = Vector(-10, -10, 10)
 SWEP.HullMaxs = Vector(10,10,10)
 SWEP.GoesInInventory = true
+SWEP.Breakable = false
 
 --Render options
 SWEP.UsesRenderableSystem = false --Should the tool use Bacon's nightmare rendering?
@@ -33,6 +34,12 @@ SWEP.HideWeaponModel=false --Can be used without UsesRenderableSystem being true
 
 function SWEP:Initialize()
 	self:SetHoldType(self.HoldType)
+	self:AddCallback("PhysicsCollide", self.PhysicsCollide)
+	if (self.Breakable) then
+		if (SERVER) then
+			self:PrecacheGibs()
+		end
+	end
 	if (self.SelectSoundOverride ~= nil) then return end
 	local physOb = self:GetPhysicsObject()
 	if (not IsValid(physOb)) then return end
@@ -100,6 +107,18 @@ end
 function SWEP:Equip(owner)
 	if (owner:IsPlayer()) then
 		owner:SelectWeapon(self:GetClass())
+	end
+end
+
+function SWEP:PhysicsCollide(data, phys)
+	if (not self.Breakable) then return end
+	if (not SERVER) then return end
+	if (data.Speed >= 52) then
+		print("broke with: " .. data.Speed)
+		local physOb = self:GetPhysicsObject()
+		self:EmitSound(util.GetSurfaceData(util.GetSurfaceIndex(physOb:GetMaterial())).breakSound)
+		self:GibBreakClient(data.OurOldVelocity)
+		self:Remove()
 	end
 end
 

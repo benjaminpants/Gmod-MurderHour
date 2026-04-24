@@ -53,7 +53,7 @@ function GM:HandleHeartbeat(ply)
 			ply.wasSprintingLastTime = true
 			ply.heartBPM = ply.heartBPM + 5
 		end
-		ply.heartBPM = ply.heartBPM + (delta * 4)
+		ply.heartBPM = ply.heartBPM + (delta * 3.5)
 		restMult = 0
 	else
 		ply.wasSprintingLastTime = false
