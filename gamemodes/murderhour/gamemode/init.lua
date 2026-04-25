@@ -40,13 +40,25 @@ function playerMeta:DropWeaponGently(weapon)
 		weapon:SetPos(eyeTrace.HitPos)
 		return
 	end
-
-	local playerTrace = util.GetPlayerTrace(self)
-	playerTrace.mins, playerTrace.maxs = physOb:GetAABB()
-	local hullCast = util.TraceHull(playerTrace)
-	if (not hullCast.Hit) then	-- the fuck?
-		weapon:SetPos(eyeTrace.HitPos)
-		return
+	
+	local hullTrace = {
+		start=eyeTrace.HitPos,
+		endpos=eyeTrace.HitPos
+	}
+	local hullCast = nil
+	hullTrace.mins, hullTrace.maxs = physOb:GetAABB()
+	-- keep going up until the start of the trace is no longer inside of something
+	while (true) do
+		hullTrace.start = hullTrace.start + weapon:GetUp()
+		hullCast = util.TraceHull(hullTrace)
+		if (hullCast.StartSolid) then continue end
+		--[[if (not hullCast.Hit) then	-- the fuck?
+			weapon:SetPos(eyeTrace.HitPos)
+			print("hullcast didn't hit?? defaulting to eyetrace!")
+			return
+		end
+		print(hullCast.HitPos)]]
+		break
 	end
 	weapon:SetPos(hullCast.HitPos + (weapon:GetUp() * 0.25))
 	physOb:SetAngleVelocity(Vector(0,0,0))

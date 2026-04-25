@@ -33,7 +33,11 @@ function HUD()
 		end
 		local colorToDraw = colorWhite
 		if (i <= #inventory.contents) then
-			textToDraw = inventory.contents[i]:GetPrintName()
+			if (IsValid(inventory.contents[i])) then
+				textToDraw = inventory.contents[i]:GetPrintName()
+			else
+				textToDraw = "[ERROR]"
+			end
 			if (client:GetActiveWeapon() == inventory.contents[i]) then
 				local hue, sat, bright = ColorToHSL(plColor)
 				hue = hue + 50
