@@ -28,9 +28,14 @@ local maxDropDist = 80*80
 
 function playerMeta:DropWeaponGently(weapon)
 	local eyeTrace = self:GetEyeTrace()
-	self:DropWeapon(weapon, nil, Vector(0,0,0))
 	if (not eyeTrace.Hit) then return end
-	if (eyeTrace.HitPos:DistToSqr(eyeTrace.StartPos) >= maxDropDist) then return end
+	if (eyeTrace.HitPos:DistToSqr(eyeTrace.StartPos) >= maxDropDist) then
+		self:DropWeapon(weapon)
+		weapon:SetPos(self:EyePos())
+		return
+	else
+		self:DropWeapon(weapon, nil, Vector(0,0,0))
+	end
 	--weapon:SetPos(eyeTrace.HitPos)
 	weapon:SetAngles(Vector(0,1,0):AngleEx(eyeTrace.HitNormal))
 	-- after we figure out (roughly) what the player is trying to aim at, get the position by using a hullcast
@@ -61,6 +66,7 @@ function playerMeta:DropWeaponGently(weapon)
 		break
 	end
 	weapon:SetPos(hullCast.HitPos + (weapon:GetUp() * 0.25))
+	weapon:EmitSound(util.GetSurfaceData(util.GetSurfaceIndex(physOb:GetMaterial())).impactSoftSound)
 	physOb:SetAngleVelocity(Vector(0,0,0))
 end
 
