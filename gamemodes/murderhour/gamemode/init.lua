@@ -24,6 +24,34 @@ function playerMeta:ForceGive(weaponClassName)
 	self:Give(weaponClassName)
 end
 
+local maxDropDist = 80*80
+
+function playerMeta:DropWeaponGently(weapon)
+	local eyeTrace = self:GetEyeTrace()
+	self:DropWeapon(weapon, nil, Vector(0,0,0))
+	if (not eyeTrace.Hit) then return end
+	if (eyeTrace.HitPos:DistToSqr(eyeTrace.StartPos) >= maxDropDist) then return end
+	--weapon:SetPos(eyeTrace.HitPos)
+	weapon:SetAngles(Vector(0,1,0):AngleEx(eyeTrace.HitNormal))
+	-- after we figure out (roughly) what the player is trying to aim at, get the position by using a hullcast
+
+	local physOb = weapon:GetPhysicsObject()
+	if (not IsValid(physOb)) then
+		weapon:SetPos(eyeTrace.HitPos)
+		return
+	end
+
+	local playerTrace = util.GetPlayerTrace(self)
+	playerTrace.mins, playerTrace.maxs = physOb:GetAABB()
+	local hullCast = util.TraceHull(playerTrace)
+	if (not hullCast.Hit) then	-- the fuck?
+		weapon:SetPos(eyeTrace.HitPos)
+		return
+	end
+	weapon:SetPos(hullCast.HitPos + (weapon:GetUp() * 0.25))
+	physOb:SetAngleVelocity(Vector(0,0,0))
+end
+
 // TODO: move heart system to its own lua file, and rewrite the heart calculation stuff to be more modular so status effects like Energized and Drunk can affect it
 
 function GM:PlayerSpawn(ply)

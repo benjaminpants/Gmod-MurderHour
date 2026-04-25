@@ -2,7 +2,7 @@ util.AddNetworkString("InventorySelect")
 
 local function DropHeldAndRemoveIfAppropiate(ply, wep)
 	if (not wep.GoesInInventory) then return end
-	ply:DropWeapon(wep)
+	ply:DropWeaponGently(wep)
 	if (not wep.Pocketable) then
 		ply:RemoveFromInventory(wep)
 	else
@@ -23,7 +23,7 @@ net.Receive("InventorySelect", function(len, ply)
 	if (isTossing) then
 		entityToFind = ply:GetActiveWeapon()
 		if (not entityToFind.GoesInInventory) then return end
-		ply:DropWeapon(entityToFind)
+		ply:DropWeaponGently(entityToFind)
 		ply:RemoveFromInventory(entityToFind)
 		return
 	end
