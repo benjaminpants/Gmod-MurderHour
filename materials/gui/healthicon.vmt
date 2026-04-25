@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "gui/healthicon"
+	"$translucent" 1
+	$vertexcolor 1
+}

@@ -10,12 +10,25 @@ function playerMeta:SetHunger(hunger)
 		self.hunger = 0
 		self:Kill() -- starved
 	end
-	net.Start("PlayerStats")
-	net.WriteFloat(self.hunger)
-	net.Send(self)
+	self.statsChanged = true
 end
 
 function playerMeta:AddHunger(amount)
-	local toSet = math.max(self:GetHunger() + amount,0)
+	local toSet = math.max(math.min(self:GetHunger() + amount,100),0)
 	self:SetHunger(toSet)
+end
+
+function playerMeta:SetThirst(thirst)
+	if (thirst == self.thirst) then return end
+	self.thirst = thirst
+	if (self.thirst <= 0) then
+		self.thirst = 0
+		self:Kill() -- starved
+	end
+	self.statsChanged = true
+end
+
+function playerMeta:AddThirst(amount)
+	local toSet = math.max(math.min(self:GetThirst() + amount,100),0)
+	self:SetThirst(toSet)
 end

@@ -1,5 +1,7 @@
 include("shared.lua")
 
+// this code is horrible
+
 surface.CreateFont("PrimaryHudFont", {
 	font = "Roboto",
 	size = 24,
@@ -12,8 +14,6 @@ surface.CreateFont("BiggerPrimaryHudFont", {
 	size = 36,
 	weight = 500
 })
-local heartMat = Material("gui/heartbeat_heart")
-local heartBorderMat = Material("gui/heartbeat_heart_border")
 
 function draw.Circle( x, y, radius, seg )
 	local cir = {}
@@ -35,9 +35,9 @@ function surface.drawCenteredTexturedSquare(x,y, size)
 end
 
 local heartTimer = 0
-local heartSize = 100
+local heartSize = 125
 local heartX = 0.05
-local heartY = 0.85
+local heartY = 0.92
 
 local blackColor = Color(0,0,0)
 local whiteColor = Color(255,255,255)
@@ -47,6 +47,58 @@ function easeOutBack(x)
 	local c3 = c1 + 1;
 
 	return 1 + c3 * math.pow(x - 1, 3) + c1 * math.pow(x - 1, 2);
+end
+
+local iconsToDraw = {
+	{
+		mat=Material("gui/heartbeat_heart"),
+		borderMat=Material("gui/heartbeat_heart_border"),
+		getFill=function(client)
+			local minHeartValue = 0.8
+			if (not client:Alive()) then
+				minHeartValue = 0
+			end
+			// the code for this animation is random bullshit but it looks really good so im not complaining
+			return math.max(easeOutBack(heartTimer * heartTimer) - 0.1,minHeartValue)
+		end
+	},
+	{
+		mat=Material("gui/healthicon"),
+		borderMat=Material("gui/healthicon_border"),
+		getFill=function(client)
+			return client:Health() / client:GetMaxHealth()
+		end
+	},
+	{
+		mat=Material("gui/hungericon"),
+		borderMat=Material("gui/hungericon_border"),
+		getFill=function(client)
+			return client:GetHunger() / 100
+		end
+	},
+	{
+		mat=Material("gui/thirsticon"),
+		borderMat=Material("gui/thirsticon_border"),
+		getFill=function(client)
+			return client:GetThirst() / 100
+		end
+	}
+}
+
+
+local function DrawMurderLikeIcon(mat, borderMat, color, x,y, size, outlineSize, fillPercent)
+	surface.SetMaterial(mat)
+	surface.SetDrawColor(0,0,0)
+	surface.drawCenteredTexturedSquare(x, y, size + outlineSize)
+	
+	surface.SetDrawColor(color:Unpack())
+	if (fillPercent ~= 0) then
+		surface.drawCenteredTexturedSquare(x,y, (size * fillPercent))
+	end
+
+	surface.SetMaterial(borderMat)
+	surface.SetDrawColor(0,0,0)
+	surface.drawCenteredTexturedSquare(x,y, size + outlineSize)
 end
 
 function HUD()
@@ -77,7 +129,7 @@ function HUD()
 	local healthBarPosY = (ScrH() * heartY) + (resHeartSize/2) + (16 * resRefH)
 	local healthBarHeight = 32 * resRefH
 
-
+	--[[
 	surface.SetDrawColor(0,0,0)
 	surface.DrawRect(healthBarPosX - (outlineSize / 2),healthBarPosY - (outlineSize / 2),resHeartSize * 3 + outlineSize,healthBarHeight + outlineSize)
 	surface.SetDrawColor(bgColor:Unpack())
@@ -89,7 +141,7 @@ function HUD()
 	surface.SetDrawColor(bgColor:Unpack())
 	surface.DrawRect(healthBarPosX,healthBarPosY + (healthBarHeight + outlineSize),resHeartSize * 3 * (client:GetHunger() / 100),(healthBarHeight / 2))
 	draw.DrawText(math.ceil(client:GetHunger()), "PrimaryHudFont",healthBarPosX + (resHeartSize * 1.5),healthBarPosY + (8 * resRefH) + ((healthBarHeight / 1.5) + outlineSize), whiteColor, TEXT_ALIGN_CENTER)
-
+	
 	surface.SetMaterial(heartMat)
 	surface.SetDrawColor(0,0,0)
 	surface.drawCenteredTexturedSquare(ScrW() * heartX, ScrH() * heartY, resHeartSize + outlineSize)
@@ -109,7 +161,16 @@ function HUD()
 
 	surface.SetMaterial(heartBorderMat)
 	surface.SetDrawColor(0,0,0)
-	surface.drawCenteredTexturedSquare(ScrW() * heartX, ScrH() * heartY, resHeartSize + outlineSize)
+	surface.drawCenteredTexturedSquare(ScrW() * heartX, ScrH() * heartY, resHeartSize + outlineSize)]]
+
+	DrawMurderLikeIcon(iconsToDraw[1].mat, iconsToDraw[1].borderMat, bgColor, ScrW() * heartX, ScrH() * heartY, resHeartSize, outlineSize, iconsToDraw[1].getFill(client))
+
+	for i=2, #iconsToDraw do
+		local vv = math.rad(132 - ((i - 2) * 32))
+		local xx = math.sin(vv) * resHeartSize * 0.9
+		local yy = math.cos(vv) * resHeartSize
+		DrawMurderLikeIcon(iconsToDraw[i].mat, iconsToDraw[i].borderMat, bgColor, (ScrW() * heartX) + xx, (ScrH() * heartY) + yy, resHeartSize / 2, outlineSize, iconsToDraw[i].getFill(client))
+	end
 
 	heartTimer = math.max(heartTimer - FrameTime(),0)
 

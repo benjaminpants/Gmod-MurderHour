@@ -113,7 +113,7 @@ end
 function SWEP:PhysicsCollide(data, phys)
 	if (not self.Breakable) then return end
 	if (not SERVER) then return end
-	if (data.Speed >= 52) then
+	if (data.Speed >= 200) then
 		print("broke with: " .. data.Speed)
 		local physOb = self:GetPhysicsObject()
 		self:EmitSound(util.GetSurfaceData(util.GetSurfaceIndex(physOb:GetMaterial())).breakSound)

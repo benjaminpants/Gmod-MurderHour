@@ -23,5 +23,6 @@ Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
 }
 
 SWEP.HungerRestore=8
+SWEP.Breakable = true
 
 DEFINE_BASECLASS(SWEP.Base)

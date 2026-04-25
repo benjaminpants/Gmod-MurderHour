@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "gui/hungericon_border"
+	"$translucent" 1
+	"$vertexcolor" 1
+}

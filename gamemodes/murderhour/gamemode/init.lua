@@ -51,6 +51,8 @@ function GM:PlayerSpawn(ply)
 	ply:ClearCorpse()
 	ply:ForceGive("murdh_hands")
 	ply:SilenceVoiceline()
+	ply.hunger = 100
+	ply.thirst = 100
 	ply:SetHunger(100)
 	ply:AddInventory(3, {ply}, false)
 end
@@ -132,6 +134,16 @@ function GM:PlayerPostMainTick(ply)
 		ply:SetPos(ply:GetNWEntity("PlayerCorpse"):GetPos())
 	end
 	self:HandleHeartbeat(ply)
+	if (ply:Alive()) then
+		ply:AddHunger(-FrameTime() / 4)
+	end
+	if (ply.statsChanged) then
+		net.Start("PlayerStats")
+		net.WriteFloat(ply.hunger)
+		net.WriteFloat(ply.thirst)
+		net.Send(ply)
+		ply.statsChanged = false
+	end
 end
 
 function GM:EntityTakeDamage(entity, info)

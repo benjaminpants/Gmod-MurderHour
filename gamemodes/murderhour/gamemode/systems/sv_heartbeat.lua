@@ -108,7 +108,7 @@ function GM:HandleHeartbeat(ply)
 		end
 		net.WriteFloat(dif)
 		net.Send(ply)
-		ply:AddHunger(-0.125)
+		ply:AddThirst(-0.125)
 		if (ply:HasStatusEffect("left_leg_broken") or ply:HasStatusEffect("right_leg_broken")) then
 			if (ply:IsSprinting()) then
 				if (math.random(1,20) == 1) then
@@ -117,9 +117,10 @@ function GM:HandleHeartbeat(ply)
 			end
 		end
 		if (ply:Health() < ply:GetMaxHealth()) then
-			if (math.random(1,60) == 1) then
+			if (math.random(1,20) == 1) then
 				ply:SetHealth(ply:Health() + 1)
 				ply:AddHunger(-1)
+				ply:AddThirst(-1)
 			end
 		end
 	end
