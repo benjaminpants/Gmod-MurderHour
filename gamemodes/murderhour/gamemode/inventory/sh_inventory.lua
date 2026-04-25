@@ -1,6 +1,8 @@
-MHInventory = {}
-MHInventory.__index = MHInventory
-RegisterMetaTable("MHInventory", MHInventory)
+if (MHInventory == nil) then
+	MHInventory = {}
+	MHInventory.__index = MHInventory
+	RegisterMetaTable("MHInventory", MHInventory)
+end
 
 local entityMeta = FindMetaTable("Entity")
 

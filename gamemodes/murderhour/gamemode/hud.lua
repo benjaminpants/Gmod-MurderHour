@@ -101,6 +101,16 @@ local function DrawMurderLikeIcon(mat, borderMat, color, x,y, size, outlineSize,
 	surface.drawCenteredTexturedSquare(x,y, size + outlineSize)
 end
 
+local upVector = Vector(0,0,1)
+
+local midVisibleLight = 6
+midVisibleLight = midVisibleLight*midVisibleLight
+
+local function IsPlayerHidden(client)
+	local lightColorAt = ((render.GetLightColor(client:GetPos()) + render.GetLightColor(client:GetPos() + (upVector * 32)) + render.GetLightColor(client:GetPos() + (upVector * -32)) / 3)) * 1000
+	return lightColorAt:Length2DSqr() <= midVisibleLight
+end
+
 function HUD()
 	local resRefW = ScrW() / 1920
 	local resRefH = ScrH() / 1080
@@ -115,10 +125,8 @@ function HUD()
 	
 	--local bgColor = HSLToColor(plHue,0.46,0.21)
 	
-	bgColor = plColor -- fix the missing color data
-
+	bgColor = plColor
 	local outlineSize = 6
-
 	local resHeartSize = (heartSize * resRefW)
 
 	// health
@@ -128,41 +136,6 @@ function HUD()
 	local healthBarPosX = (ScrW() * heartX) - (resHeartSize / 2) - (12 * resRefW)
 	local healthBarPosY = (ScrH() * heartY) + (resHeartSize/2) + (16 * resRefH)
 	local healthBarHeight = 32 * resRefH
-
-	--[[
-	surface.SetDrawColor(0,0,0)
-	surface.DrawRect(healthBarPosX - (outlineSize / 2),healthBarPosY - (outlineSize / 2),resHeartSize * 3 + outlineSize,healthBarHeight + outlineSize)
-	surface.SetDrawColor(bgColor:Unpack())
-	surface.DrawRect(healthBarPosX,healthBarPosY,resHeartSize * 3 * healthR,healthBarHeight)
-	draw.DrawText(client:Health(), "PrimaryHudFont",healthBarPosX + (resHeartSize * 1.5),healthBarPosY + (8 * resRefH), whiteColor, TEXT_ALIGN_CENTER)
-	// hunger bar
-	surface.SetDrawColor(0,0,0)
-	surface.DrawRect(healthBarPosX - (outlineSize / 2),healthBarPosY - (outlineSize / 2) + (healthBarHeight + outlineSize),resHeartSize * 3 + outlineSize,(healthBarHeight / 2) + outlineSize)
-	surface.SetDrawColor(bgColor:Unpack())
-	surface.DrawRect(healthBarPosX,healthBarPosY + (healthBarHeight + outlineSize),resHeartSize * 3 * (client:GetHunger() / 100),(healthBarHeight / 2))
-	draw.DrawText(math.ceil(client:GetHunger()), "PrimaryHudFont",healthBarPosX + (resHeartSize * 1.5),healthBarPosY + (8 * resRefH) + ((healthBarHeight / 1.5) + outlineSize), whiteColor, TEXT_ALIGN_CENTER)
-	
-	surface.SetMaterial(heartMat)
-	surface.SetDrawColor(0,0,0)
-	surface.drawCenteredTexturedSquare(ScrW() * heartX, ScrH() * heartY, resHeartSize + outlineSize)
-	//draw.Circle(ScrW() * 0.06, ScrH() * 0.9, 100 * resRefW, 32)
-	
-	surface.SetDrawColor(bgColor:Unpack())
-	local minHeartValue = 0.8
-	if (not client:Alive()) then
-		minHeartValue = 0
-	end
-	// the code for this animation is random bullshit but it looks really good so im not complaining
-	local heartTimerSize = math.max(easeOutBack(heartTimer * heartTimer) - 0.1,minHeartValue)
-	if (heartTimerSize ~= 0) then
-		surface.drawCenteredTexturedSquare(ScrW() * heartX, ScrH() * heartY, (heartSize * heartTimerSize) * resRefW)
-		//draw.Circle(ScrW() * 0.06, ScrH() * 0.9, ((100 * heartTimer) * resRefW) - outlineSize, 32)
-	end
-
-	surface.SetMaterial(heartBorderMat)
-	surface.SetDrawColor(0,0,0)
-	surface.drawCenteredTexturedSquare(ScrW() * heartX, ScrH() * heartY, resHeartSize + outlineSize)]]
-
 	DrawMurderLikeIcon(iconsToDraw[1].mat, iconsToDraw[1].borderMat, bgColor, ScrW() * heartX, ScrH() * heartY, resHeartSize, outlineSize, iconsToDraw[1].getFill(client))
 
 	for i=2, #iconsToDraw do
@@ -176,24 +149,41 @@ function HUD()
 
 	//draw.RoundedBox(outlineSize,ScrW() * heartX - (resHeartSize / 1.5),(ScrH() * 0.9) - outlineSize,(ScrW() * 0.1) + (outlineSize * 2),ScrH() * 0.07, Color(0,0,0))
 	local barWidth = 200
-	// now, draw text
-	local i = 0
+	local statusesToDraw = {}
+	if (IsPlayerHidden(client)) then
+		table.insert(statusesToDraw, {
+			id="hidden",
+			progress=1,
+			strength=1
+		})
+	end
 	for index=1, #client.statuses do
-		if (GAMEMODE.StatusEffects[client.statuses[index].id].hidden_client) then
+		local currentStatus = client.statuses[index]
+		if (GAMEMODE.StatusEffects[currentStatus.id].hidden_client) then
 			continue
 		end
+		local progress = currentStatus.time
+		if (GAMEMODE.StatusEffects[currentStatus.id].timed) then
+			progress = (currentStatus.time - CurTime()) / (currentStatus.time - currentStatus.time_applied)
+		end
+		table.insert(statusesToDraw, {
+			id=currentStatus.id,
+			progress=progress,
+			strength=currentStatus.strength
+		})
+	end
+	// now, draw text
+	local i = 0
+	for index=1, #statusesToDraw do
+		local currentStatus = statusesToDraw[index]
 		i = i + 1
 		local textX = (ScrW() * heartX) - (resHeartSize / 2) - (12 * resRefW)
-		local textY = (ScrH() * heartY) - resHeartSize - ((i - 1) * (24 + outlineSize)) - (outlineSize * 2)
+		local textY = (ScrH() * heartY) - resHeartSize - ((i) * (24 + outlineSize)) - (outlineSize * 2)
 		surface.SetDrawColor(0,0,0)
 		surface.DrawRect(textX - (outlineSize / 2),textY - (outlineSize / 2), (barWidth) + outlineSize, 24 + outlineSize)
 		surface.SetDrawColor(bgColor:Unpack())
-		local progress = client.statuses[index].time
-		if (GAMEMODE.StatusEffects[client.statuses[index].id].timed) then
-			progress = (client.statuses[index].time - CurTime()) / (client.statuses[index].time - client.statuses[index].time_applied)
-		end
-		surface.DrawRect(textX,textY, barWidth * progress, 24)
-		draw.DrawText("#murderhour.statuses." .. client.statuses[index].id .. "_" .. client.statuses[index].strength .. ".title", "PrimaryHudFont",textX, textY)
+		surface.DrawRect(textX,textY, barWidth * currentStatus.progress, 24)
+		draw.DrawText("#murderhour.statuses." .. currentStatus.id .. "_" .. currentStatus.strength .. ".title", "PrimaryHudFont",textX, textY)
 	end
 end
 
@@ -215,5 +205,71 @@ net.Receive("PlayerHeartbeat", function()
 	if (rawDif <= 0.1) then return end -- dont bother
 	EmitSound("player/heartbeat_noloop.wav", Vector(0,0,0), -1, CHAN_AUTO, rawDif)
 end)
+
+local midDist = 1024
+
+midDist = midDist*midDist // pre-square distance
+
+function GM:HUDDrawTargetID()
+	local trace = LocalPlayer():GetEyeTrace()
+	if ( !trace.Hit ) then return end
+	if ( !trace.HitNonWorld ) then return end
+
+	local text = "ERROR"
+	local font = "PrimaryHudFont"
+
+	if ( trace.Entity:IsPlayer() ) then
+		text = trace.Entity:Nick()
+	else
+		--text = trace.Entity:GetClass()
+		return
+	end
+
+	if (trace.Entity:GetPos():DistToSqr(LocalPlayer():GetPos()) >= midDist) then
+		text = "???"
+	end
+	if (IsPlayerHidden(trace.Entity)) then
+		return
+	end
+
+	surface.SetFont( font )
+	local w, h = surface.GetTextSize( text )
+
+	local MouseX, MouseY = input.GetCursorPos()
+
+	if ( MouseX == 0 && MouseY == 0 || !vgui.CursorVisible() ) then
+
+		MouseX = ScrW() / 2
+		MouseY = ScrH() / 2
+
+	end
+
+	local x = MouseX
+	local y = MouseY
+
+	x = x - w / 2
+	y = y + 30
+
+	-- The fonts internal drop shadow looks lousy with AA on
+	draw.SimpleText( text, font, x + 1, y + 1, Color( 0, 0, 0, 120 ) )
+	draw.SimpleText( text, font, x + 2, y + 2, Color( 0, 0, 0, 50 ) )
+	draw.SimpleText( text, font, x, y, whiteColor)
+
+	--[[
+	y = y + h + 5
+
+	-- Draw the health
+	text = trace.Entity:Health() .. "%"
+	font = "TargetIDSmall"
+
+	surface.SetFont( font )
+	w, h = surface.GetTextSize( text )
+	x = MouseX - w / 2
+
+	draw.SimpleText( text, font, x + 1, y + 1, Color( 0, 0, 0, 120 ) )
+	draw.SimpleText( text, font, x + 2, y + 2, Color( 0, 0, 0, 50 ) )
+	draw.SimpleText( text, font, x, y, self:GetTeamColor( trace.Entity ) )]]
+	return false
+end
 
 include("hud_weaponselector.lua")

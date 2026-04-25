@@ -135,7 +135,7 @@ function GM:PlayerPostMainTick(ply)
 	end
 	self:HandleHeartbeat(ply)
 	if (ply:Alive()) then
-		ply:AddHunger(-FrameTime() / 4)
+		ply:AddHunger(-FrameTime() / 8)
 	end
 	if (ply.statsChanged) then
 		net.Start("PlayerStats")
