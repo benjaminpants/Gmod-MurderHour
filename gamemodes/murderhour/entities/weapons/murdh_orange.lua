@@ -6,6 +6,9 @@ SWEP.WorldModel = "models/props/cs_italy/orange.mdl"
 SWEP.UseHands = true
 SWEP.PrintName = "Orange"
 SWEP.Purpose = "Tasty fruit. Can be cut with a knife."
+SWEP.HungerRestore=10
+SWEP.ThirstRestore=2
+SWEP.Breakable = true
 
 SWEP.ViewmodelRender = 
 {
@@ -21,8 +24,5 @@ PosOffset=Vector(2.5,-3.5,0.1), --Position offset.
 AngOffset=Angle(0,0,0), --Angular offset.
 Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
 }
-
-SWEP.HungerRestore=8
-SWEP.Breakable = true
 
 DEFINE_BASECLASS(SWEP.Base)

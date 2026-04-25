@@ -7,7 +7,7 @@ SWEP.UseHands = true
 SWEP.PrintName = "Beer"
 SWEP.Purpose = "Drink away your problems. Calms your heart rate, don't overdose."
 SWEP.Breakable = true
-SWEP.ThirstRestore=8
+SWEP.ThirstRestore=12
 
 SWEP.ViewmodelRender = 
 {

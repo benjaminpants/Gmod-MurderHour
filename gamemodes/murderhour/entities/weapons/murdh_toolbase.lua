@@ -110,15 +110,22 @@ function SWEP:Equip(owner)
 	end
 end
 
+function SWEP:PrepareGib(velocity) --I don't think this was my best choice. But was it better than a hook?
+	self:Gib(velocity)
+end
+
+function SWEP:Gib(velocity)
+	local physOb = self:GetPhysicsObject()
+	self:EmitSound(util.GetSurfaceData(util.GetSurfaceIndex(physOb:GetMaterial())).breakSound)
+	self:GibBreakClient(velocity)
+	self:Remove()
+end
+
 function SWEP:PhysicsCollide(data, phys)
 	if (not self.Breakable) then return end
 	if (not SERVER) then return end
 	if (data.Speed >= 200) then
-		print("broke with: " .. data.Speed)
-		local physOb = self:GetPhysicsObject()
-		self:EmitSound(util.GetSurfaceData(util.GetSurfaceIndex(physOb:GetMaterial())).breakSound)
-		self:GibBreakClient(data.OurOldVelocity)
-		self:Remove()
+		self:PrepareGib(data.OurOldVelocity)
 	end
 end
 

@@ -59,6 +59,10 @@ GM.PropsToReplace = {
 		entity="murdh_water",
 		useOriginalModel=true
 	},
+	["models/props_junk/watermelon01.mdl"]={
+		entity="murdh_melon",
+		useOriginalModel=true
+	},
 }
 
 -- TODO: move these to hooks

@@ -6,6 +6,7 @@ SWEP.WorldModel = "models/props/cs_office/water_bottle.mdl"
 SWEP.UseHands = true
 SWEP.PrintName = "Water"
 SWEP.Purpose = "Remember to stay hydrated!"
+SWEP.ThirstRestore=20
 
 SWEP.ViewmodelRender = 
 {
