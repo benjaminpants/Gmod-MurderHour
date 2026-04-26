@@ -7,6 +7,8 @@ AddCSLuaFile("hud.lua")
 AddCSLuaFile("hud_weaponselector.lua")
 AddCSLuaFile("systems/cl_stats.lua")
 AddCSLuaFile("inventory/cl_inventory.lua")
+AddCSLuaFile("ui/cl_question.lua")
+AddCSLuaFile("systems/cl_actionbar.lua")
 
 util.AddNetworkString("PlayerHeartbeat")
 
@@ -16,12 +18,14 @@ include("inventory/sv_inventory.lua")
 include("sv_voicelines.lua")
 include("sv_corpses.lua")
 include("sv_entityreplacer.lua")
+include("ui/sv_question.lua")
+include("systems/sv_actionbar.lua")
 
 local playerMeta = FindMetaTable("Player")
 
 function playerMeta:ForceGive(weaponClassName)
 	GAMEMODE.WepBeingForceGived = true
-	self:Give(weaponClassName)
+	return self:Give(weaponClassName)
 end
 
 local maxDropDist = 80*80
@@ -48,7 +52,8 @@ function playerMeta:DropWeaponGently(weapon)
 	
 	local hullTrace = {
 		start=eyeTrace.HitPos,
-		endpos=eyeTrace.HitPos
+		endpos=eyeTrace.HitPos,
+		filter=self
 	}
 	local hullCast = nil
 	hullTrace.mins, hullTrace.maxs = physOb:GetAABB()
@@ -101,6 +106,8 @@ function GM:PlayerSpawn(ply)
 	ply.thirst = 100
 	ply:SetHunger(100)
 	ply:AddInventory(3, {ply}, false)
+	local suitCase = ply:ForceGive("murdh_suitcase")
+	suitCase:AssignInvOwner(ply)
 end
 
 include("systems/sv_heartbeat.lua")
@@ -320,6 +327,14 @@ end
 
 function GM:PlayerUse(ply, ent)
 	if (ent:IsWeapon()) then
+		if (ent.CanBePickedUpBy) then
+			if (not ent:CanBePickedUpBy(ply)) then
+				if (not ent:UseOverride(ply)) then
+					return false
+				end
+				return
+			end
+		end
 		GAMEMODE.WepBeingForceGived = true
 	end
 end

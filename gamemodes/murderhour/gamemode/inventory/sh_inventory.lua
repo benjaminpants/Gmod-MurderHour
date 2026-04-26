@@ -11,11 +11,11 @@ function entityMeta:HasInventory()
 end
 
 function entityMeta:IsInInventory()
-	return (self._inInventory == true) // nil != true so this makes it return false if its nil
+	return (self:GetNWBool("InInventory") == true) // nil != true so this makes it return false if its nil
 end
 
 function entityMeta:MakeInventoryIntangible()
-	self:AddEffects(EF_NODRAW)
+	self:SetNWBool("InInventory", true)
 	self:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE) -- might as well not exist!
 	self:CollisionRulesChanged()
 

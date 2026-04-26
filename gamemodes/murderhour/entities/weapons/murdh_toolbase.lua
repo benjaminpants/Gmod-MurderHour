@@ -19,6 +19,7 @@ SWEP.HullMins = Vector(-10, -10, 10)
 SWEP.HullMaxs = Vector(10,10,10)
 SWEP.GoesInInventory = true
 SWEP.Breakable = false
+SWEP.UseDistance = 100
 
 --Render options
 SWEP.UsesRenderableSystem = false --Should the tool use Bacon's nightmare rendering?
@@ -61,6 +62,18 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
+
+end
+
+function SWEP:CanBePickedUpBy(ply)
+	return true
+end
+
+function SWEP:UseOverride(ply)
+	return true
+end
+
+function SWEP:OnLoadedViaReplacement()
 
 end
 
@@ -129,6 +142,11 @@ function SWEP:PhysicsCollide(data, phys)
 	end
 end
 
+function SWEP:BeingLookedAtBy(ply)
+	local eyeTrace = ply:GetEyeTrace()
+	return (eyeTrace.Entity == self)
+end
+
 --The rendering nightmare--
 function SWEP:PreDrawViewModel(vm, wep, ply)
 	if self.HideWeaponModel == true then
@@ -181,10 +199,12 @@ end
 --The rendering nightmare--
 function SWEP:ViewModelDrawn(vm, flags)
 	if (self.UsesRenderableSystem~=true) then return end
+	if (self.ViewmodelRender==nil) then return end
 	self:GeneralRenderFunction(vm,self.ViewmodelRender, flags)
 end
 
 function SWEP:DrawWorldModel(flags)
+	if (self:IsInInventory() and (not IsValid(self:GetOwner()))) then return end -- dont draw if in inventory AND we aren't actively equipped
 	if (not IsValid(self:GetOwner())) or (self.UsesRenderableSystem == false) then --If we're not using the render system, it's prob a bonemergable weapon so render it always.
 		self:DrawModel(flags) --So the world model doesn't just vaporize.
 	end

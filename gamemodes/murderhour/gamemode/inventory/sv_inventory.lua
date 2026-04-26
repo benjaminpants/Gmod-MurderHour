@@ -15,8 +15,7 @@ function inventoryMeta:Add(entity)
 	end
 	if (#self.contents >= self.limit) then return false end
 	table.insert(self.contents, entity)
-	entity._inInventory = true
-	entity:AddEffects(EF_NODRAW)
+	entity:SetNWBool("InInventory", true)
 	entity._invOldCGroup = entity:GetCollisionGroup()
 	entity:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE) -- might as well not exist!
 	entity:CollisionRulesChanged()
@@ -38,13 +37,13 @@ function inventoryMeta:Remove(entity)
 			continue
 		end
 	end
-	entity._inInventory = false
-	entity:RemoveEffects(EF_NODRAW)
+	entity:SetNWBool("InInventory", false)
 	entity:SetCollisionGroup(entity._invOldCGroup) -- bring it back
 	entity:CollisionRulesChanged()
 	local physOb = entity:GetPhysicsObject()
 	if (not IsValid(physOb)) then return true end
 	physOb:EnableMotion(true)
+	physOb:Wake()
 	return true
 end
 
@@ -58,8 +57,12 @@ function entityMeta:AddInventory(limit, owners, networkToEveryone)
 	end
 	local inventory = MHInventory(limit)
 	inventory.owners = owners
+	inventory.networkToOwnersOnly = (not networkToEveryone)
 	self.inventory = inventory
-	self:NetworkInventory()
+	-- TODO: HACK! GET RID OF THIS PROBABLY DOESN'T ACTUALLY FIX THE ISSUE AT ALL
+	timer.Simple(0, function()
+		self:NetworkInventory()
+	end)
 end
 
 function entityMeta:NetworkInventory(specificPlayer)

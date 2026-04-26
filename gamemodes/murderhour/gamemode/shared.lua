@@ -5,6 +5,7 @@ if (SERVER) then
 	AddCSLuaFile("sh_humanoid.lua")
 	AddCSLuaFile("systems/sh_stats.lua")
 	AddCSLuaFile("inventory/sh_inventory.lua")
+	AddCSLuaFile("ui/sh_question.lua")
 end
 
 // include all other shared files
@@ -13,6 +14,7 @@ include("systems/sh_stats.lua")
 include("inventory/sh_inventory.lua")
 include("sh_voicelines.lua")
 include("sh_humanoid.lua")
+include("ui/sh_question.lua")
 
 GM.Name = "Murder Hour"
 GM.Author = "N/A"

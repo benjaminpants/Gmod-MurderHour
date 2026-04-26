@@ -218,18 +218,30 @@ function GM:HUDDrawTargetID()
 	local text = "ERROR"
 	local font = "PrimaryHudFont"
 
-	if ( trace.Entity:IsPlayer() ) then
+	local traceIsPlayer = false
+	if (trace.Entity:IsPlayer()) then
 		text = trace.Entity:Nick()
+		traceIsPlayer = true
 	else
-		--text = trace.Entity:GetClass()
-		return
+		if (trace.Entity:GetClass() == "murdh_suitcase") then
+			local ply = trace.Entity:GetInvOwner()
+			if (not IsValid(ply)) then
+				text = "Unowned Suitcase"
+			else
+				text = ply:Nick() .. "'s Suitcase"
+			end
+		else
+			return
+		end
 	end
 
-	if (trace.Entity:GetPos():DistToSqr(LocalPlayer():GetPos()) >= midDist) then
-		text = "???"
-	end
-	if (IsPlayerHidden(trace.Entity)) then
-		return
+	if (traceIsPlayer) then
+		if (trace.Entity:GetPos():DistToSqr(LocalPlayer():GetPos()) >= midDist) then
+			text = "???"
+		end
+		if (IsPlayerHidden(trace.Entity)) then
+			return
+		end
 	end
 
 	surface.SetFont( font )

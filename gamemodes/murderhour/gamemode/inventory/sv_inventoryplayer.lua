@@ -12,3 +12,10 @@ function playerMeta:DropEntireInventory()
 		self:DropInvWeapon(v)
 	end
 end
+
+
+function playerMeta:PickupWeaponToInv(wep)
+	if (not wep.GoesInInventory) then return end
+	self:AddToInventory(wep)
+	self:PickupWeapon(wep)
+end

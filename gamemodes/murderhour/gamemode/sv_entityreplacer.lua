@@ -26,6 +26,7 @@ function GM:ReplaceAllEntites()
 				entity:GetPhysicsObject():Sleep()
 			end
 			entity:SetName(prop:GetName())
+			entity:OnLoadedViaReplacement()
 			prop:SetName("MHDELETING")
 		end
 	end
@@ -62,6 +63,18 @@ GM.PropsToReplace = {
 	["models/props_junk/watermelon01.mdl"]={
 		entity="murdh_melon",
 		useOriginalModel=true
+	},
+	["models/props_c17/suitcase_passenger_physics.mdl"]={
+		entity="murdh_suitcase",
+		useOriginalModel=false
+	},
+	["models/props_c17/suitcase001a.mdl"]={
+		entity="murdh_suitcase",
+		useOriginalModel=false
+	},
+	["models/props_c17/briefcase001a.mdl"]={
+		entity="murdh_suitcase",
+		useOriginalModel=false
 	},
 }
 
