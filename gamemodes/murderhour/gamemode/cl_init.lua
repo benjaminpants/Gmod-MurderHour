@@ -14,3 +14,16 @@ end)
 function GM:HUDDrawPickupHistory()
 	-- fuck you
 end
+
+function GM:OnGamemodeLoaded()
+	local weaponButtonPanel = {}
+	function weaponButtonPanel:PaintOver(w, h)
+		if (not IsValid(self.weapon)) then return end
+		self.weapon:DrawWeaponSelection((-w/2)+(5*(w/128)),0,w*2,w*2,255)
+	end
+	function weaponButtonPanel:SetWeapon(weapon)
+		self.weapon = weapon
+		self:SetTooltip(weapon:GetPrintName())
+	end
+	vgui.Register("DWeaponButton", weaponButtonPanel, "DButton")
+end

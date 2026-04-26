@@ -142,6 +142,10 @@ function SWEP:PhysicsCollide(data, phys)
 	end
 end
 
+function SWEP:OnTick()
+	
+end
+
 function SWEP:BeingLookedAtBy(ply)
 	local eyeTrace = ply:GetEyeTrace()
 	return (eyeTrace.Entity == self)

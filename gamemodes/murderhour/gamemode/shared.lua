@@ -5,6 +5,8 @@ if (SERVER) then
 	AddCSLuaFile("sh_humanoid.lua")
 	AddCSLuaFile("systems/sh_stats.lua")
 	AddCSLuaFile("inventory/sh_inventory.lua")
+	AddCSLuaFile("inventory/sh_container.lua")
+	AddCSLuaFile("inventory/cl_container.lua")
 	AddCSLuaFile("ui/sh_question.lua")
 end
 

@@ -44,4 +44,14 @@ function MHInventory:Contains(entity)
 	return false
 end
 
+function MHInventory:CanFit(entity)
+	return (#self.contents) < self.limit
+end
+
+function MHInventory:IsFull(entity)
+	return (#self.contents) >= self.limit
+end
+
 setmetatable(MHInventory, {__call = MHInventory.new})
+
+include("sh_container.lua")

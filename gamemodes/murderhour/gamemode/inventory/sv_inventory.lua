@@ -8,6 +8,18 @@ function inventoryMeta:ShouldNetworkTo(player)
 	return false
 end
 
+function inventoryMeta:NetWrite()
+	net.WriteUInt(self.limit, 8)
+	net.WriteUInt(#self.contents, 8)
+	for k, v in ipairs(self.contents) do
+		net.WriteEntity(v)
+	end
+	net.WriteUInt(#self.owners, 8)
+	for k, v in ipairs(self.owners) do
+		net.WritePlayer(v)
+	end
+end
+
 function inventoryMeta:Add(entity)
 	if (entity:IsInInventory()) then
 		error("Attempted to add entity to inventory that was already in inventory!")
@@ -72,15 +84,7 @@ function entityMeta:NetworkInventory(specificPlayer)
 	end
 	net.Start("NetworkInventory")
 	net.WriteEntity(self)
-	net.WriteUInt(self.inventory.limit, 8)
-	net.WriteUInt(#self.inventory.contents, 8)
-	for k, v in ipairs(self.inventory.contents) do
-		net.WriteEntity(v)
-	end
-	net.WriteUInt(#self.inventory.owners, 8)
-	for k, v in ipairs(self.inventory.owners) do
-		net.WritePlayer(v)
-	end
+	self.inventory:NetWrite()
 	if (specificPlayer ~= nil) then
 		net.Send(specificPlayer)
 		return
@@ -104,6 +108,10 @@ function entityMeta:RemoveFromInventory(entity)
 	return res
 end
 
+function entityMeta:InventoryContains(entity)
+	return self.inventory:Contains(entity)
+end
+
 
 hook.Add("PlayerDisconnected", "MHPDisconnectCleanup", function(ply)
 	if (not ply:HasInventory()) then return end
@@ -112,5 +120,6 @@ hook.Add("PlayerDisconnected", "MHPDisconnectCleanup", function(ply)
 	end
 end)
 
+include("sv_container.lua")
 include("sv_inventoryselect.lua")
 include("sv_inventoryplayer.lua")

@@ -165,6 +165,12 @@ function GM:Tick()
 		end
 		self:PlayerPostMainTick(ply)
 	end
+
+	for _, v in ipairs(ents.FindByClass("murdh_*" )) do
+		if (v.OnTick ~= nil) then
+			v:OnTick()
+		end
+	end
 end
 
 // stored here to assist the garbage collector

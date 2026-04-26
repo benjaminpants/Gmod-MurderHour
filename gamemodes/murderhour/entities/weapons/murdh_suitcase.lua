@@ -25,6 +25,16 @@ SWEP.UsesRenderableSystem = true
 
 
 DEFINE_BASECLASS(SWEP.Base)
+ContainerAddBaseFunctions(SWEP)
+
+function SWEP:ContainerValidTransferTarget(ply)
+	if (self:GetLocked()) then
+		if (not IsValid(self:GetInvOwner())) then return false end
+		if (self:GetInvOwner():InventoryContains(self)) then return true end
+		if (self:GetInvOwner() ~= ply) then return false end
+	end
+	return (ply:GetPos():Distance(self:GetPos()) <= self.UseDistance)
+end
 
 function SWEP:SetupDataTables()
 	--BaseClass.SetupDataTables(self)
@@ -44,6 +54,9 @@ function SWEP:Initialize()
 	self.ActivityTranslate[ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE ]	= index + 5
 	self.ActivityTranslate[ ACT_MP_RELOAD_STAND ]				= index + 6
 	self.ActivityTranslate[ ACT_RANGE_ATTACK1 ]					= index + 8 -- Is this right? Is this for NPCs?
+	if (SERVER) then
+		self:InitContainer()
+	end
 end
 
 function SWEP:CanBeOpenedBy(ply)
@@ -133,11 +146,12 @@ end
 
 function SWEP:MessageResponse(ply, message)
 	if (message == "open") then
+		self:StartTransferWith(ply)
 		-- placeholder behavior
-		for i=#self.inventory.contents, 1, -1 do
+		--[[for i=#self.inventory.contents, 1, -1 do
 			self.inventory.contents[i]:SetPos(self:GetPos() + Vector(0,0,10))
 			self:RemoveFromInventory(self.inventory.contents[i])
-		end
+		end]]
 	elseif (message == "pickup") then
 		ply:PickupWeaponToInv(self)
 	elseif (message == "lockpick") then
@@ -179,18 +193,8 @@ function SWEP:LockpickFinished(ply, completed)
 	end
 end
 
-function SWEP:PhysicsCollide(data, phys)
-	if (not SERVER) then return end
-	if (data.Speed >= 525) then
-		self:LockpickFinished(nil, true)
-		self:EmitSound(self.LockpickSounds[math.random(1,#self.LockpickSounds)])
-	end
-end
-
-function SWEP:Think()
-	if (not IsValid(self:GetOwner())) then return end
-	--local owner = self:GetOwner()
-	--owner:AnimSetGestureSequence(GESTURE_SLOT_CUSTOM, owner:LookupSequence(ACT))
+function SWEP:OnTick()
+	self:ContainerTick()
 end
 
 local matrix = Matrix()

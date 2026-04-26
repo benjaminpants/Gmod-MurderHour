@@ -1,3 +1,19 @@
+local inventoryMeta = FindMetaTable("MHInventory")
+
+function inventoryMeta:NetReadInto()
+	table.Empty(self.contents)
+	table.Empty(self.owners)
+	self.limit = net.ReadUInt(8)
+	local contentCount = net.ReadUInt(8)
+	for i=1, contentCount do
+		table.insert(self.contents, net.ReadEntity())
+	end
+	local ownerCount = net.ReadUInt(8)
+	for i=1, ownerCount do
+		table.insert(self.owners, net.ReadPlayer())
+	end
+end
+
 net.Receive("NetworkInventory", function()
 	local ent = net.ReadEntity()
 	if (not IsValid(ent)) then
@@ -7,15 +23,10 @@ net.Receive("NetworkInventory", function()
 	if (ent.inventory == nil) then
 		ent.inventory = MHInventory()
 	end
-	table.Empty(ent.inventory.contents)
-	table.Empty(ent.inventory.owners)
-	ent.inventory.limit = net.ReadUInt(8)
-	local contentCount = net.ReadUInt(8)
-	for i=1, contentCount do
-		table.insert(ent.inventory.contents, net.ReadEntity())
-	end
-	local ownerCount = net.ReadUInt(8)
-	for i=1, ownerCount do
-		table.insert(ent.inventory.owners, net.ReadPlayer())
+	ent.inventory:NetReadInto()
+	if (ent == LocalPlayer()) then
+		hook.Run("LocalPlayerInventoryUpdated")
 	end
 end)
+
+include("cl_container.lua")
