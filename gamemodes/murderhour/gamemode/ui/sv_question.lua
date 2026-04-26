@@ -16,7 +16,6 @@ function playerMeta:SendQuestion(title, options, callback, validcheck)
 		error("Attempted to send question: " .. title .. " to " .. self:Nick() .. " with >31 options!")
 		return
 	end
-	--[[
 	-- player has no possible response
 	if (#options == 0) then
 		self:CancelQuestion(false)
@@ -24,10 +23,10 @@ function playerMeta:SendQuestion(title, options, callback, validcheck)
 	end
 	-- player only has one option, so choose it
 	if (#options == 1) then
-		self.currentQuestion.callback(ply, options[1])
+		self.currentQuestion.callback(self, options[1])
 		self.currentQuestion = nil
 		return
-	end]]
+	end
 	net.Start("QuestionBackForth")
 	net.WriteBool(true)
 	net.WriteString(title)
