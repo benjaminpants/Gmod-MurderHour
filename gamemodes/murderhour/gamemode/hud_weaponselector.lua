@@ -88,7 +88,7 @@ local function PlaySelectSound(ply)
 		return
 	end
 	if (not IsValid(inventory.contents[selectedSlot])) then return end
-	ply:EmitSound(inventory.contents[selectedSlot]:GetSelectSound(), 75, 100, 0.15)
+	ply:EmitSound(inventory.contents[selectedSlot]:GetSelectSound(), 75, 100, 0.25)
 end
 
 hook.Add("HUDPaint","MurderHourDrawCustomWeaponSelector", HUD)

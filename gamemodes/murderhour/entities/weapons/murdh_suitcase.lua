@@ -83,13 +83,21 @@ function SWEP:CanBePickedUpBy(ply)
 	return false
 end
 
-function SWEP:UseOverride(ply)
-	if (ply.currentQuestion ~= nil) then return false end
-	if (self:IsPlayerHolding()) then return false end
-	if (not self:BeingLookedAtBy(ply)) then return false end
-	local potentialOptions = {"pickup"}
+function SWEP:PrimaryAttack()
+	if (not SERVER) then return end
+	self:AskQuestion(self:GetOwner())
+	self:SetNextPrimaryFire(CurTime() + 1)
+end
+
+function SWEP:AskQuestion(ply)
+	local potentialOptions = {}
+	if (not self:IsInInventory()) then
+		table.insert(potentialOptions,"pickup")
+	end
 	if (not self:CanBeOpenedBy(ply)) then
-		table.insert(potentialOptions, "lockpick")
+		if (not self:IsInInventory()) then
+			table.insert(potentialOptions, "lockpick")
+		end
 	else
 		table.insert(potentialOptions, "open")
 		if (not self:GetLocked()) then
@@ -99,11 +107,27 @@ function SWEP:UseOverride(ply)
 			table.insert(potentialOptions, "claim")
 		end
 	end
+	local checkFunc = nil
+	if (self:IsInInventory()) then
+		checkFunc = function(ply)
+			return self:IsInInventory()
+		end
+	else
+		checkFunc = function(ply)
+			return ply:GetPos():Distance(self:GetPos()) <= self.UseDistance
+		end
+	end
 	ply:SendQuestion("#murderhour.interact", potentialOptions, function(ply, message)
 		self:MessageResponse(ply,message)
-	end, function(ply)
-		return ply:GetPos():Distance(self:GetPos()) <= self.UseDistance
-	end)
+	end, checkFunc)
+
+end
+
+function SWEP:UseOverride(ply)
+	if (ply.currentQuestion ~= nil) then return false end
+	if (self:IsPlayerHolding()) then return false end
+	if (not self:BeingLookedAtBy(ply)) then return false end
+	self:AskQuestion(ply)
 	return false
 end
 
@@ -145,9 +169,21 @@ function SWEP:LockpickFinished(ply, completed)
 	completed = completed and (math.random(1,3) == 1)
 	if (completed) then
 		self:SetLocked(false)
-		ply:ChatPrint("Lockpick succeeded!")
+		if (IsValid(ply)) then
+			ply:ChatPrint("Lockpick succeeded!")
+		end
 	else
-		ply:ChatPrint("Lockpick failed!")
+		if (IsValid(ply)) then
+			ply:ChatPrint("Lockpick failed!")
+		end
+	end
+end
+
+function SWEP:PhysicsCollide(data, phys)
+	if (not SERVER) then return end
+	if (data.Speed >= 525) then
+		self:LockpickFinished(nil, true)
+		self:EmitSound(self.LockpickSounds[math.random(1,#self.LockpickSounds)])
 	end
 end
 
