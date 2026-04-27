@@ -80,6 +80,7 @@ function entityMeta:AddInventory(limit, owners, networkToEveryone)
 end
 
 function entityMeta:NetworkInventory(specificPlayer)
+	if (not IsValid(self)) then return end
 	if (self.inventory == nil) then
 		error("Attempted to network entity " .. tostring(self) .. "'s inventory with no inventory!")
 		return

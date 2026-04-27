@@ -32,7 +32,11 @@ local maxDropDist = 80*80
 
 function playerMeta:DropWeaponGently(weapon)
 	local eyeTrace = self:GetEyeTrace()
-	if (not eyeTrace.Hit) then return end
+	if (not eyeTrace.Hit) then
+		self:DropWeapon(weapon)
+		weapon:SetPos(self:EyePos())
+		return
+	end
 	if (eyeTrace.HitPos:DistToSqr(eyeTrace.StartPos) >= maxDropDist) then
 		self:DropWeapon(weapon)
 		weapon:SetPos(self:EyePos())
@@ -313,7 +317,12 @@ function GM:PlayerCanPickupWeapon(ply, wep)
 	if (GAMEMODE.WepBeingForceGived == true) then
 		GAMEMODE.WepBeingForceGived = false
 		if (wep.GoesInInventory) then
-			return ply:AddToInventory(wep)
+			local res = ply:AddToInventory(wep)
+			if (ply:GetWeapon(wep:GetClass()) == wep) then
+				ply:DropWeapon(wep)
+				return true
+			end
+			return res
 		end
 		return true
 	end
