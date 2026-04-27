@@ -5,6 +5,9 @@ util.AddNetworkString("QuestionBackForth")
 local playerMeta = FindMetaTable("Player")
 
 function playerMeta:SendQuestion(title, options, callback, validcheck)
+	if (validcheck ~= nil) then
+		if (not validcheck(self)) then return end
+	end
 	self:CancelQuestion(false)
 	self.currentQuestion = {
 		title=title,

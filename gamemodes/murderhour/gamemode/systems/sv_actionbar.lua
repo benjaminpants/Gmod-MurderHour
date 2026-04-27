@@ -22,6 +22,26 @@ function playerMeta:StartActionBar(title, finishTime, remainStill, tickcallback,
 	net.Send(self)
 end
 
+local connectedId = 0
+function playerMeta:StartConnectedActionBarWith(otherPly, title, otherTitle, finishTime, tickcallback, finishedcallback)
+	self:StartActionBar(title, finishTime, true, function(ply)
+		if (not tickcallback(ply, otherPly)) then return false end
+		if (otherPly.actionBar == nil) then return false end
+		if (otherPly.actionBar.connectedId ~= ply.actionBar.connectedId) then return false end
+		return true
+	end, function(ply, finished)
+		finishedcallback(ply, otherPly, finished)
+	end)
+	self.actionBar.connectedId = connectedId
+	otherPly:StartActionBar(otherTitle, finishTime, true, function(ply)
+		return true
+	end, function(ply, finished)
+		-- do nothing
+	end)
+	otherPly.actionBar.connectedId = connectedId
+	connectedId = connectedId + 1
+end
+
 function playerMeta:CancelActionBar(successful)
 	if (self.actionBar ~= nil) then
 		self.actionBar.finishedcallback(self, successful)

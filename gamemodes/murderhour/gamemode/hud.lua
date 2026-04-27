@@ -223,13 +223,8 @@ function GM:HUDDrawTargetID()
 		text = trace.Entity:Nick()
 		traceIsPlayer = true
 	else
-		if (trace.Entity:GetClass() == "murdh_suitcase") then
-			local ply = trace.Entity:GetInvOwner()
-			if (not IsValid(ply)) then
-				text = "Unowned Suitcase"
-			else
-				text = ply:Nick() .. "'s Suitcase"
-			end
+		if (trace.Entity.GetTargetID ~= nil) then
+			text = trace.Entity:GetTargetID()
 		else
 			return
 		end

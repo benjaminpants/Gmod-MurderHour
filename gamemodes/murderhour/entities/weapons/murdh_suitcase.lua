@@ -91,6 +91,7 @@ function SWEP:AssignInvOwner(ply)
 	if (not self:HasInventory()) then
 		self:AddInventory(4, {ply}, false)
 	end
+	self:SetNextPrimaryFire(CurTime() + 1)
 end
 
 function SWEP:CanBePickedUpBy(ply)
@@ -136,6 +137,15 @@ function SWEP:AskQuestion(ply)
 		self:MessageResponse(ply,message)
 	end, checkFunc)
 
+end
+
+function SWEP:GetTargetID()
+	local ply = self:GetInvOwner()
+	if (not IsValid(ply)) then
+		return "Unowned Suitcase"
+	else
+		return ply:Nick() .. "'s Suitcase"
+	end
 end
 
 function SWEP:UseOverride(ply)

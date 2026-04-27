@@ -30,7 +30,6 @@ function playerMeta:AddToInventory(entity)
 		self:PickupWeapon(entity)
 	end
 	if (self.inventory:IsFull()) then
-		-- TODO: evaluate if we should just be checking for hands
 		if (self:GetActiveWeapon():GetClass() == "murdh_hands") then
 			self:PickupWeapon(entity)
 			--self:SelectWeapon(entity)

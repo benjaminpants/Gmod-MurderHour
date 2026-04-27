@@ -340,10 +340,32 @@ function GM:PlayerSwitchWeapon(ply, oldWep, newWep)
 	end
 end
 
+function GM:GeneratePlayerInspectOptions(ply, targetPly, optionTable)
+	table.insert(optionTable, "assesscondition")
+	table.insert(optionTable, "feelpockets")
+end
+
+function GM:OnPlayerInspect(ply, inspectee, response)
+	if (response == "assesscondition") then
+		ply:StartConnectedActionBarWith(inspectee, "#murderhour.action.assesscondition", "#murderhour.action.beingassessed", CurTime() + 3, function() return true end, function(ply, otherPly, completed)
+			if (completed) then
+				ply:ChatPrint("Assess condition worked")
+			end
+		end)
+	end
+end
+
 function GM:PlayerUse(ply, ent)
 	if (ent:IsPlayer()) then
 		-- for doctors, assesscondition should provide more detail.
-		ply:SendQuestion("#murderhour.interaction", {"assesscondition","feelpockets"}, function() end)
+		-- TODO: make it so this invalidates based off distance
+		local inspectOptions = {}
+		gamemode.Call("GeneratePlayerInspectOptions", ply, ent, inspectOptions)
+		ply:SendQuestion("#murderhour.interaction", inspectOptions, function(ply, response)
+			gamemode.Call("OnPlayerInspect", ply, ent, response)
+		end, function(play)
+			return play:GetPos():Distance(ent:GetPos()) <= 64
+		end)
 	end
 	if (ent:IsWeapon()) then
 		if (ent.CanBePickedUpBy) then
