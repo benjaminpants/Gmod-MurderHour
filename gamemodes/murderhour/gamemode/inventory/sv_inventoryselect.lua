@@ -40,5 +40,9 @@ net.Receive("InventorySelect", function(len, ply)
 	if (not inventory:Contains(entityToFind)) then return end
 	if (not HolsterWeaponIfExists(ply:GetActiveWeapon(), entityToFind)) then return end
 	DropHeldAndRemoveIfAppropiate(ply, ply:GetActiveWeapon())
-	ply:PickupWeapon(entityToFind)
+	-- TODO: ACK HACK!
+	if (not ply:PickupWeapon(entityToFind)) then
+		ply:DropWeapon(entityToFind)
+		ply:PickupWeapon(entityToFind)
+	end
 end)

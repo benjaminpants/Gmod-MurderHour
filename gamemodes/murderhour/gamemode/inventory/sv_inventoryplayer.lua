@@ -17,10 +17,6 @@ end
 
 function playerMeta:PickupWeaponToInv(wep)
 	if (not wep.GoesInInventory) then return end
-	local activeWep = self:GetActiveWeapon()
-	if (IsValid(activeWep)) then
-		self:DropWeaponGentlyAndRemoveIfAppropiate(activeWep)
-	end
 	self:AddToInventory(wep)
 	self:PickupWeapon(wep)
 end
@@ -30,8 +26,8 @@ function playerMeta:AddToInventory(entity)
 	local addedSuccessfully = entityMeta.AddToInventory(self, entity)
 	if (not addedSuccessfully) then return false end
 	if (not entity.Pocketable) then
-		--self:DropWeaponGentlyAndRemoveIfAppropiate(self:GetActiveWeapon())
-		--self:PickupWeapon(entity)
+		self:DropWeaponGentlyAndRemoveIfAppropiate(self:GetActiveWeapon())
+		self:PickupWeapon(entity)
 	end
 	if (self.inventory:IsFull()) then
 		-- TODO: evaluate if we should just be checking for hands

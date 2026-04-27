@@ -28,6 +28,7 @@ function inventoryMeta:Add(entity)
 	if (#self.contents >= self.limit) then return false end
 	table.insert(self.contents, entity)
 	entity:SetNWBool("InInventory", true)
+	entity:DrawShadow(false)
 	entity._invOldCGroup = entity:GetCollisionGroup()
 	entity:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE) -- might as well not exist!
 	entity:CollisionRulesChanged()
@@ -50,6 +51,7 @@ function inventoryMeta:Remove(entity)
 		end
 	end
 	entity:SetNWBool("InInventory", false)
+	entity:DrawShadow(true)
 	entity:SetCollisionGroup(entity._invOldCGroup) -- bring it back
 	entity:CollisionRulesChanged()
 	local physOb = entity:GetPhysicsObject()

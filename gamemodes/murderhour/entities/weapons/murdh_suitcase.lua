@@ -57,6 +57,7 @@ function SWEP:Initialize()
 	if (SERVER) then
 		self:InitContainer()
 	end
+	self:SetNextPrimaryFire(CurTime() + 2)
 end
 
 function SWEP:CanBeOpenedBy(ply)
@@ -98,6 +99,7 @@ end
 
 function SWEP:PrimaryAttack()
 	if (not SERVER) then return end
+	if (not self:HasInventory()) then return end
 	self:AskQuestion(self:GetOwner())
 	self:SetNextPrimaryFire(CurTime() + 1)
 end
@@ -153,10 +155,10 @@ function SWEP:MessageResponse(ply, message)
 			self:RemoveFromInventory(self.inventory.contents[i])
 		end]]
 	elseif (message == "pickup") then
-		ply:PickupWeaponToInv(self)
+		ply:AddToInventory(self)
 	elseif (message == "lockpick") then
 		self.timeUntilNextSound = 0
-		ply:StartActionBar("#murderhour.action.lockpick", CurTime() + 5, true, function(ply)
+		ply:StartActionBar("#murderhour.action.lockpick", CurTime() + 8, true, function(ply)
 			return self:LockpickTick(ply)
 		end, function(ply, completed)
 			self:LockpickFinished(ply, completed)

@@ -16,6 +16,7 @@ end
 
 function entityMeta:MakeInventoryIntangible()
 	self:SetNWBool("InInventory", true)
+	self:DrawShadow(false)
 	self:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE) -- might as well not exist!
 	self:CollisionRulesChanged()
 

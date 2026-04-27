@@ -332,6 +332,10 @@ function GM:PlayerSwitchWeapon(ply, oldWep, newWep)
 end
 
 function GM:PlayerUse(ply, ent)
+	if (ent:IsPlayer()) then
+		-- for doctors, assesscondition should provide more detail.
+		ply:SendQuestion("#murderhour.interaction", {"assesscondition","feelpockets"}, function() end)
+	end
 	if (ent:IsWeapon()) then
 		if (ent.CanBePickedUpBy) then
 			if (not ent:CanBePickedUpBy(ply)) then
