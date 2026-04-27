@@ -352,6 +352,19 @@ function GM:OnPlayerInspect(ply, inspectee, response)
 				ply:ChatPrint("Assess condition worked")
 			end
 		end)
+	elseif (response == "feelpockets") then
+		ply:StartConnectedActionBarWith(inspectee, "#murderhour.action.feelingpockets", "#murderhour.action.beingpocketsfelt", CurTime() + 2, function() return true end, function(ply, otherPly, completed)
+			if (completed) then
+				local invAmount = #otherPly.inventory.contents
+				local otherWep = otherPly:GetActiveWeapon()
+				if (IsValid(otherWep)) then
+					if (otherWep:GetClass() ~= "murdh_hands") then
+						invAmount = invAmount - 1
+					end
+				end
+				ply:ChatPrintLocalized("murderhour.chatprint.feltpockets", {invAmount, otherPly:Nick()})
+			end
+		end)
 	end
 end
 
