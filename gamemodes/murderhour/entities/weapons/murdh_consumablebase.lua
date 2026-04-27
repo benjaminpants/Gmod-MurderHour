@@ -21,7 +21,6 @@ function SWEP:PrimaryAttack()
 
 		self:OnConsume(owner)
 		owner:RemoveFromInventory(self)
-		owner:DropWeapon()
 		self:Remove()
 	end
 end
