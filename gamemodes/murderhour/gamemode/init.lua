@@ -20,6 +20,7 @@ include("sv_corpses.lua")
 include("sv_entityreplacer.lua")
 include("ui/sv_question.lua")
 include("systems/sv_actionbar.lua")
+include("sv_playerinspectinteractions.lua")
 
 local playerMeta = FindMetaTable("Player")
 
@@ -349,20 +350,37 @@ function GM:OnPlayerInspect(ply, inspectee, response)
 	if (response == "assesscondition") then
 		ply:StartConnectedActionBarWith(inspectee, "#murderhour.action.assesscondition", "#murderhour.action.beingassessed", CurTime() + 3, function() return true end, function(ply, otherPly, completed)
 			if (completed) then
-				ply:ChatPrint("Assess condition worked")
+				otherPly:Inspect_AssessCondition(ply)
 			end
 		end)
 	elseif (response == "feelpockets") then
 		ply:StartConnectedActionBarWith(inspectee, "#murderhour.action.feelingpockets", "#murderhour.action.beingpocketsfelt", CurTime() + 2, function() return true end, function(ply, otherPly, completed)
 			if (completed) then
-				local invAmount = #otherPly.inventory.contents
-				local otherWep = otherPly:GetActiveWeapon()
-				if (IsValid(otherWep)) then
-					if (otherWep:GetClass() ~= "murdh_hands") then
-						invAmount = invAmount - 1
-					end
-				end
-				ply:ChatPrintLocalized("murderhour.chatprint.feltpockets", {invAmount, otherPly:Nick()})
+				otherPly:Inspect_FeelPockets(ply)
+			end
+		end)
+	end
+end
+
+function GM:GenerateCorpseInspectOptions(ply, corpse, optionTable)
+	table.insert(optionTable, "assesscondition")
+	table.insert(optionTable, "feelpockets")
+	table.insert(optionTable, "emptypockets")
+end
+
+function GM:OnCorpseInspect(ply, inspectee, response)
+	if (not IsValid(inspectee)) then return end
+	local otherPly = inspectee:GetNWEntity("Owner")
+	if (response == "assesscondition") then
+		ply:StartConnectedActionBarWith(otherPly, "#murderhour.action.assesscondition", "#murderhour.action.beingassessed", CurTime() + 3, function() return true end, function(ply, otherPly, completed)
+			if (completed) then
+				otherPly:Inspect_AssessCondition(ply)
+			end
+		end)
+	elseif (response == "feelpockets") then
+		ply:StartConnectedActionBarWith(otherPly, "#murderhour.action.feelingpockets", "#murderhour.action.beingpocketsfelt", CurTime() + 2, function() return true end, function(ply, otherPly, completed)
+			if (completed) then
+				otherPly:Inspect_FeelPockets(ply)
 			end
 		end)
 	end
@@ -371,16 +389,24 @@ end
 function GM:PlayerUse(ply, ent)
 	if (ent:IsPlayer()) then
 		-- for doctors, assesscondition should provide more detail.
-		-- TODO: make it so this invalidates based off distance
 		local inspectOptions = {}
 		gamemode.Call("GeneratePlayerInspectOptions", ply, ent, inspectOptions)
 		ply:SendQuestion("#murderhour.interaction", inspectOptions, function(ply, response)
 			gamemode.Call("OnPlayerInspect", ply, ent, response)
 		end, function(play)
+			if (not IsValid(ent)) then return false end
 			return play:GetPos():Distance(ent:GetPos()) <= 64
 		end)
-	end
-	if (ent:IsWeapon()) then
+	elseif (ent:GetNWBool("IsCorpse")) then
+		local inspectOptions = {}
+		gamemode.Call("GenerateCorpseInspectOptions", ply, ent, inspectOptions)
+		ply:SendQuestion("#murderhour.interaction", inspectOptions, function(ply, response)
+			gamemode.Call("OnCorpseInspect", ply, ent, response)
+		end, function(play)
+			if (not IsValid(ent)) then return false end
+			return play:GetPos():Distance(ent:GetPos()) <= 72
+		end)
+	elseif (ent:IsWeapon()) then
 		if (ent.CanBePickedUpBy) then
 			if (not ent:CanBePickedUpBy(ply)) then
 				if (not ent:UseOverride(ply)) then

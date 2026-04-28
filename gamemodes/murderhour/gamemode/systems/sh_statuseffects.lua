@@ -21,6 +21,7 @@ GM.StatusEffects = {
 	exhausted = {
 		timed=false,
 		hidden=false,
+		assess_display=false,
 		OnAdd = function(ply, effectData)
 			ply:SprintDisable()
 			ply:EmitSound("player/breathe1.wav", 40)
@@ -47,6 +48,7 @@ GM.StatusEffects = {
 	drunk = {
 		timed=true,
 		hidden=false,
+		assess_display=true,
 		OnAdd = function(ply, effectData)
 			if (effectData.strength >= 4) then
 				effectData.blackout_time = CurTime() + math.random(20,40)
@@ -79,6 +81,7 @@ GM.StatusEffects = {
 	left_leg_broken = {
 		timed=true,
 		hidden=false,
+		assess_display=true,
 		OnAdd = function(ply, _)
 			ply:EmitSound(boneBreakSounds[math.random(1,#boneBreakSounds)], 35)
 		end
@@ -86,6 +89,7 @@ GM.StatusEffects = {
 	right_leg_broken = {
 		timed=true,
 		hidden=false,
+		assess_display=true,
 		OnAdd = function(ply, _)
 			ply:EmitSound(boneBreakSounds[math.random(1,#boneBreakSounds)])
 		end
@@ -93,7 +97,8 @@ GM.StatusEffects = {
 	getting_up = {
 		timed=true,
 		hidden=false,
-		hidden_client=true
+		hidden_client=true,
+		assess_display=false
 	},
 	blackout = {
 		OnAdd = function(ply, effectData)
@@ -118,6 +123,7 @@ GM.StatusEffects = {
 		timed=true,
 		hidden=false,
 		hidden_client=false,
+		assess_display=true,
 		OnAdd = function(ply, effectData)
 			effectData.next_damage = CurTime() + 2
 			DoBleedDamage(ply, effectData.strength*effectData.strength)
@@ -133,7 +139,8 @@ GM.StatusEffects = {
 	bleed_spurt = {
 		timed=true,
 		hidden=false,
-		hidden_client=false
+		hidden_client=false,
+		assess_display=true,
 	}
 }
 
