@@ -27,6 +27,10 @@ elseif (SERVER) then
 	function playerMeta:ChatPrintLocalized(message, data)
 		net.Start("ChatLocalized")
 		net.WriteString(message)
+		if (data == nil) then
+			net.WriteUInt(0, 8)
+			net.Send(self)
+		end
 		net.WriteUInt(#data, 8)
 		for k, v in ipairs(data) do
 			if (type(v) == "string") then
