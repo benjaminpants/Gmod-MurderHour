@@ -30,6 +30,7 @@ elseif (SERVER) then
 		if (data == nil) then
 			net.WriteUInt(0, 8)
 			net.Send(self)
+			return
 		end
 		net.WriteUInt(#data, 8)
 		for k, v in ipairs(data) do
