@@ -27,6 +27,9 @@ function ContainerAddBaseFunctions(tab)
 			end
 		end
 	end
+	tab.ContainerCanFit = function(self, item)
+		return true
+	end
 	tab.StartTransferWith = function(self,ply)
 		if (not (IsValid(ply) and self:ContainerValidTransferTarget(ply))) then return end
 		ply.containerTransfer = self
@@ -66,13 +69,9 @@ net.Receive("NetworkContainerTransfer", function(len, ply)
 		if (ply.inventory:CanFit(targetEnt)) then
 			currentContainer:RemoveFromInventory(targetEnt)
 			ply:AddToInventory(targetEnt)
-			--[[if (ply.inventory:IsFull() and (ply:GetActiveWeapon():GetClass() == "weapon_murdh_hands")) then
-				ply:SelectWeapon(targetEnt)
-				print("forced select")
-			end]]
 		end
 	elseif (ply:InventoryContains(targetEnt)) then -- if the target is one of their items, they want to deposit it
-		if (currentContainer.inventory:CanFit(targetEnt)) then
+		if (currentContainer.inventory:CanFit(targetEnt) and currentContainer:ContainerCanFit(targetEnt)) then
 			ply:DropInvWeapon(targetEnt)
 			currentContainer:AddToInventory(targetEnt)
 		end
