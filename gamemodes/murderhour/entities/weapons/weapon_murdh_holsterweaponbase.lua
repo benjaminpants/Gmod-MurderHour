@@ -1,5 +1,5 @@
 AddCSLuaFile()
-SWEP.Base = "murdh_toolbase"
+SWEP.Base = "weapon_murdh_toolbase"
 SWEP.DefaultSwitchCooldown = 1
 
 DEFINE_BASECLASS(SWEP.Base)

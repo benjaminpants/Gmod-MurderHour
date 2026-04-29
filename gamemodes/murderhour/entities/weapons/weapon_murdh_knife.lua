@@ -1,4 +1,4 @@
-SWEP.Base = "murdh_chargeweaponbase"
+SWEP.Base = "weapon_murdh_chargeweaponbase"
 
 SWEP.ViewModel = "models/weapons/cstrike/c_knife_t.mdl"
 SWEP.WorldModel = "models/weapons/w_knife_t.mdl"
@@ -84,7 +84,7 @@ end
 hook.Add("StartCommand", "MHKnifeStartCommand", function(ply, cmd)
 	local activeWep = ply:GetActiveWeapon()
 	if (not IsValid(activeWep)) then return end
-	if (activeWep:GetClass() == "murdh_knife") then
+	if (activeWep:GetClass() == "weapon_murdh_knife") then
 		if (activeWep:GetChargeLevel() >= 3) then
 			cmd:SetButtons(bit.band(cmd:GetButtons(), bit.bnot(IN_SPEED)))
 		end

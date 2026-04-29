@@ -1,6 +1,6 @@
 AddCSLuaFile()
 
-SWEP.Base = "murdh_holsterweaponbase"
+SWEP.Base = "weapon_murdh_holsterweaponbase"
 SWEP.Primary.ChargeTimes = {}
 SWEP.Primary.Charges = true
 SWEP.Secondary.ChargeTimes = {}

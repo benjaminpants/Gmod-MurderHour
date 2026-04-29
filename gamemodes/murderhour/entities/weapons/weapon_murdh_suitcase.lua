@@ -1,5 +1,5 @@
 AddCSLuaFile()
-SWEP.Base = "murdh_toolbase"
+SWEP.Base = "weapon_murdh_toolbase"
 
 SWEP.ViewModel = "models/props_c17/SuitCase_Passenger_Physics.mdl"
 SWEP.WorldModel = "models/props_c17/SuitCase_Passenger_Physics.mdl"
@@ -64,7 +64,7 @@ function SWEP:CanBeOpenedBy(ply)
 	return ((ply == self:GetInvOwner()) or (not self:GetLocked()))
 end
 
-local potentialContents = {"murdh_melonslice", "murdh_glock", "murdh_knife", "murdh_water", "murdh_beer", "murdh_mp7", "murdh_silencedpistol"}
+local potentialContents = {"weapon_murdh_melonslice", "weapon_murdh_glock", "weapon_murdh_knife", "weapon_murdh_water", "weapon_murdh_beer", "weapon_murdh_mp7", "weapon_murdh_silencedpistol"}
 
 function SWEP:OnLoadedViaReplacement()
 	self:AddInventory(4, {}, false)
@@ -223,7 +223,7 @@ end
 hook.Add("StartCommand", "MHSuitcaseStartCommand", function(ply, cmd)
 	local activeWep = ply:GetActiveWeapon()
 	if (not IsValid(activeWep)) then return end
-	if (activeWep:GetClass() == "murdh_suitcase") then
+	if (activeWep:GetClass() == "weapon_murdh_suitcase") then
 		cmd:SetButtons(bit.band(cmd:GetButtons(), bit.bnot(bit.bor(IN_JUMP, IN_DUCK))))
 	end
 end)

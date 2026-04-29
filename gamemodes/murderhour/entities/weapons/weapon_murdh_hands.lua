@@ -15,7 +15,7 @@ SWEP.HitDelay = 0.1
 SWEP.GoesInInventory = false
 SWEP.Primary.ChargeTimes = {0.5,1,2}
 
-SWEP.Base = "murdh_chargeweaponbase"
+SWEP.Base = "weapon_murdh_chargeweaponbase"
 SWEP.PrintName = "Hands"
 
 SWEP.ViewModel = Model("models/weapons/c_arms.mdl")

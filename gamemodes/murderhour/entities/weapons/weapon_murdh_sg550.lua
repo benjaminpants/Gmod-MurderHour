@@ -1,5 +1,5 @@
 AddCSLuaFile()
-SWEP.Base = "murdh_gunbase"
+SWEP.Base = "weapon_murdh_gunbase"
 
 SWEP.Primary.ClipSize = 20
 SWEP.Primary.DefaultClip = 20

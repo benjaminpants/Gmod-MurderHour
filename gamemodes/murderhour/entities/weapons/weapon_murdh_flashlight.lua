@@ -1,5 +1,5 @@
 AddCSLuaFile()
-SWEP.Base = "murdh_toolbase"
+SWEP.Base = "weapon_murdh_toolbase"
 
 SWEP.ViewModel = "models/weapons/c_shotgun.mdl"
 SWEP.WorldModel = "models/maxofs2d/lamp_flashlight.mdl"

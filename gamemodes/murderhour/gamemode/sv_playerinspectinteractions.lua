@@ -4,7 +4,7 @@ function playerMeta:Inspect_FeelPockets(sendResultsTo)
 	local invAmount = #self.inventory.contents
 	local otherWep = self:GetActiveWeapon()
 	if (IsValid(otherWep)) then
-		if (otherWep:GetClass() ~= "murdh_hands") then
+		if (otherWep:GetClass() ~= "weapon_murdh_hands") then
 			invAmount = invAmount - 1
 		end
 	end

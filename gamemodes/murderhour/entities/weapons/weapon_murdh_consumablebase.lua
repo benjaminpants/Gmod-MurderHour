@@ -1,6 +1,6 @@
 AddCSLuaFile()
 
-SWEP.Base = "murdh_toolbase"
+SWEP.Base = "weapon_murdh_toolbase"
 SWEP.UsesRenderableSystem = true
 SWEP.HideWeaponModel=true
 SWEP.Spawnable = false

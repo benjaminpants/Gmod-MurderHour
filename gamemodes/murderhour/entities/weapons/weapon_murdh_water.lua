@@ -1,5 +1,5 @@
 AddCSLuaFile()
-SWEP.Base = "murdh_consumablebase"
+SWEP.Base = "weapon_murdh_consumablebase"
 
 SWEP.ViewModel = "models/weapons/c_grenade.mdl" --The equip looks dumb but oh well.
 SWEP.WorldModel = "models/props/cs_office/water_bottle.mdl"

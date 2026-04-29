@@ -37,43 +37,43 @@ end
 -- Make sure all model paths here are completely lowercase even if Right-Click copy model tells you otherwise
 GM.PropsToReplace = {
 	["models/props_junk/glassbottle01a.mdl"]={
-		entity="murdh_beer",
+		entity="weapon_murdh_beer",
 		useOriginalModel=true
 	},
 	["models/props_junk/garbage_glassbottle003a.mdl"]={
-		entity="murdh_beer",
+		entity="weapon_murdh_beer",
 		useOriginalModel=false --I like the other one better as it's higher poly.
 	},
 	["models/props_junk/garbage_glassbottle001a.mdl"]={
-		entity="murdh_beerlarge",
+		entity="weapon_murdh_beerlarge",
 		useOriginalModel=true
 	},
 	["models/props_junk/garbage_glassbottle002a.mdl"]={ 
-		entity="murdh_beerlarge",
+		entity="weapon_murdh_beerlarge",
 		useOriginalModel=false --I'm just too lazy to adjust the rendering.
 	},
 	["models/props/cs_italy/orange.mdl"]={
-		entity="murdh_orange",
+		entity="weapon_murdh_orange",
 		useOriginalModel=true
 	},
 	["models/props/cs_office/water_bottle.mdl"]={
-		entity="murdh_water",
+		entity="weapon_murdh_water",
 		useOriginalModel=true
 	},
 	["models/props_junk/watermelon01.mdl"]={
-		entity="murdh_melon",
+		entity="weapon_murdh_melon",
 		useOriginalModel=true
 	},
 	["models/props_c17/suitcase_passenger_physics.mdl"]={
-		entity="murdh_suitcase",
+		entity="weapon_murdh_suitcase",
 		useOriginalModel=false
 	},
 	["models/props_c17/suitcase001a.mdl"]={
-		entity="murdh_suitcase",
+		entity="weapon_murdh_suitcase",
 		useOriginalModel=false
 	},
 	["models/props_c17/briefcase001a.mdl"]={
-		entity="murdh_suitcase",
+		entity="weapon_murdh_suitcase",
 		useOriginalModel=false
 	},
 }

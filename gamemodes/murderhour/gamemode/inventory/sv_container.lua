@@ -66,7 +66,7 @@ net.Receive("NetworkContainerTransfer", function(len, ply)
 		if (ply.inventory:CanFit(targetEnt)) then
 			currentContainer:RemoveFromInventory(targetEnt)
 			ply:AddToInventory(targetEnt)
-			--[[if (ply.inventory:IsFull() and (ply:GetActiveWeapon():GetClass() == "murdh_hands")) then
+			--[[if (ply.inventory:IsFull() and (ply:GetActiveWeapon():GetClass() == "weapon_murdh_hands")) then
 				ply:SelectWeapon(targetEnt)
 				print("forced select")
 			end]]

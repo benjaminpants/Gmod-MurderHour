@@ -1,5 +1,5 @@
 AddCSLuaFile()
-SWEP.Base = "murdh_toolbase"
+SWEP.Base = "weapon_murdh_toolbase"
 
 SWEP.Primary.Damage = 0
 SWEP.Primary.BulletForce = 1

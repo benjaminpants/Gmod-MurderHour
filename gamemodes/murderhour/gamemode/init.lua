@@ -105,13 +105,13 @@ function GM:PlayerSpawn(ply)
 	ply.ragdolled = false
 	ply.supressDamageSound = false
 	ply:ClearCorpse()
-	ply:ForceGive("murdh_hands")
+	ply:ForceGive("weapon_murdh_hands")
 	ply:SilenceVoiceline()
 	ply.hunger = 100
 	ply.thirst = 100
 	ply:SetHunger(100)
 	ply:AddInventory(3, {ply}, false)
-	local suitCase = ply:ForceGive("murdh_suitcase")
+	local suitCase = ply:ForceGive("weapon_murdh_suitcase")
 	suitCase:AssignInvOwner(ply)
 end
 
@@ -304,7 +304,7 @@ end
 function GM:AllowPlayerPickup(ply, ent)
 	local activeWeapon = ply:GetActiveWeapon()
 	if (not IsValid(activeWeapon)) then return true end
-	if (ply:GetActiveWeapon():GetClass() ~= "murdh_hands") then return false end
+	if (ply:GetActiveWeapon():GetClass() ~= "weapon_murdh_hands") then return false end
 	return not activeWeapon:GetAttackStance()
 end
 

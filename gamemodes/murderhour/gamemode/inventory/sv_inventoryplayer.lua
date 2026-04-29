@@ -30,7 +30,7 @@ function playerMeta:AddToInventory(entity)
 		self:PickupWeapon(entity)
 	end
 	if (self.inventory:IsFull()) then
-		if (self:GetActiveWeapon():GetClass() == "murdh_hands") then
+		if (self:GetActiveWeapon():GetClass() == "weapon_murdh_hands") then
 			self:PickupWeapon(entity)
 			--self:SelectWeapon(entity)
 		end
@@ -42,7 +42,7 @@ function playerMeta:RemoveFromInventory(entity)
 	local removedSuccessfully = entityMeta.RemoveFromInventory(self, entity)
 	if (not removedSuccessfully) then return false end
 	if (self:GetActiveWeapon() == entity) then
-		self:SelectWeapon("murdh_hands")
+		self:SelectWeapon("weapon_murdh_hands")
 	end
 	return true
 end
