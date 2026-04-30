@@ -12,7 +12,7 @@ return {
 		hidden=false,
 		assess_display=true,
 		OnAdd = function(ply, _)
-			ply:EmitSound(boneBreakSounds[math.random(1,#boneBreakSounds)])
+			ply:EmitSound(boneBreakSounds[math.random(1,#boneBreakSounds)], 35)
 		end
 	}
 }
