@@ -28,7 +28,7 @@ function SWEP:PrimaryAttack()
 		Inflictor=self,
 		Damage=self.Primary.Damage,
 		Force=self.Primary.BulletForce,
-		Count=self.Primary.BulletCount,
+		Num=self.Primary.BulletCount,
 		AmmoType=self.Primary.Ammo,
 		Dir=owner:GetAimVector(),
 		Src=owner:GetShootPos(),

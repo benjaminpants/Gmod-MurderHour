@@ -272,6 +272,10 @@ function GM:EntityTakeDamage(entity, info)
 	return false
 end
 
+function GM:PlayerNoClip(ply, desiredState)
+	return false
+end
+
 function GM:ScalePlayerDamage(ply, hitgroup, info)
 	if (hitgroup == HITGROUP_HEAD) then
 		info:ScaleDamage(1.4)

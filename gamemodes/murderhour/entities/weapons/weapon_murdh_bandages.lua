@@ -6,6 +6,7 @@ SWEP.PrintName = "Bandages"
 SWEP.Pocketable = true
 SWEP.HoldType = "slam"
 
+SWEP.ActionTitles = {"#murderhour.action.bandaging", "#murderhour.action.beingbandaged"}
 SWEP.UseSounds = {"foley/alyx_hug_eli.wav"} -- lol?
 SWEP.UseSoundDelay = {0.7,1}
 
@@ -31,4 +32,6 @@ function SWEP:ActionFinished(owner, otherPly, completed)
 	if (not completed) then return end
 	otherPly:RemoveAllStatusEffectWithID("bleed_steady")
 	otherPly:RemoveAllStatusEffectWithID("bleed_spurt")
+	owner:RemoveFromInventory(self)
+	self:Remove()
 end
