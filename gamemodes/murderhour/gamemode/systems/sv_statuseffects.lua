@@ -127,6 +127,9 @@ function playerMeta:RemoveAllStatusEffectWithID(id)
 	for i=#self.statuses, 1, -1 do
 		if (self.statuses[i].id == id) then
 			gamemode.Call("CallStatusEffectFunction", self, self.statuses[i], "OnRemove")
+			net.Start("PlayerRemoveStatusEffect")
+			net.WriteInt(self.statuses[i].uuid, 16)
+			net.Send(self)
 			table.remove(self.statuses, i)
 			amountRemoved = amountRemoved + 1
 		end
