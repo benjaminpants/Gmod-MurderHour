@@ -117,7 +117,7 @@ function GM:HandleHeartbeat(ply)
 			end
 		end
 		if (ply:Health() < ply:GetMaxHealth()) then
-			if (math.random(1,20) == 1) then
+			if (math.random(1,15) == 1) then
 				ply:SetHealth(ply:Health() + 1)
 				ply:AddHunger(-1)
 				ply:AddThirst(-1)

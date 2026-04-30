@@ -4,6 +4,7 @@ SWEP.Range = 80
 SWEP.UsageTime = 5
 SWEP.SelfUsageTime = nil
 SWEP.CanSelfApply = true
+SWEP.CanApplyToBodies = true
 SWEP.ActionTitles = {"#murderhour.action.placeholder", "#murderhour.action.beingplaceholdered"}
 
 SWEP.UseSounds = {"friends/message.wav"}
@@ -25,6 +26,9 @@ function SWEP:PrimaryAttack()
 	if (not trace.Hit) then return end
 	local otherPly = trace.Entity
 	if (not IsValid(otherPly)) then return end
+	if ((otherPly:GetNWBool("IsCorpse") and not otherPly:GetNWBool("IsDead")) and self.CanApplyToBodies) then
+		otherPly = otherPly:GetNWEntity("Owner")
+	end
 	if (not otherPly:IsPlayer()) then return end
 	self.timeUntilNextSound = 0
 	if (not self:ActionStart(owner, otherPly)) then return end

@@ -1,5 +1,6 @@
 util.AddNetworkString("PlayerStats")
 
+local statDrainConvar = GetConVar("sv_murdh_naturalstatdrain")
 
 local playerMeta = FindMetaTable("Player")
 
@@ -14,6 +15,7 @@ function playerMeta:SetHunger(hunger)
 end
 
 function playerMeta:AddHunger(amount)
+	if ((not statDrainConvar:GetBool()) and (amount < 0)) then return end
 	local toSet = math.max(math.min(self:GetHunger() + amount,100),0)
 	self:SetHunger(toSet)
 end
@@ -29,6 +31,7 @@ function playerMeta:SetThirst(thirst)
 end
 
 function playerMeta:AddThirst(amount)
+	if ((not statDrainConvar:GetBool()) and (amount < 0)) then return end
 	local toSet = math.max(math.min(self:GetThirst() + amount,100),0)
 	self:SetThirst(toSet)
 end
