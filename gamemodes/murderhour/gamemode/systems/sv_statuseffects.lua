@@ -122,6 +122,18 @@ function playerMeta:RemoveStatusEffect(uuid)
 	net.Send(self)
 end
 
+function playerMeta:RemoveAllStatusEffectWithID(id)
+	local amountRemoved = 0
+	for i=#self.statuses, 1, -1 do
+		if (self.statuses[i].id == id) then
+			gamemode.Call("CallStatusEffectFunction", self, self.statuses[i], "OnRemove")
+			table.remove(self.statuses, i)
+			amountRemoved = amountRemoved + 1
+		end
+	end
+	return amountRemoved
+end
+
 // handle it like this because then we send one message instead of a ton
 function playerMeta:RemoveAllStatusEffects()
 	local toRemove = {}

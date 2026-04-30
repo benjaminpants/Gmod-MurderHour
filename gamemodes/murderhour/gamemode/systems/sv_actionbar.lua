@@ -22,8 +22,15 @@ function playerMeta:StartActionBar(title, finishTime, remainStill, tickcallback,
 	net.Send(self)
 end
 
+local function ReturnTrueAlways()
+	return true
+end
+
 local connectedId = 0
 function playerMeta:StartConnectedActionBarWith(otherPly, title, otherTitle, finishTime, tickcallback, finishedcallback)
+	if (tickcallback == nil) then
+		tickcallback = ReturnTrueAlways
+	end
 	self:StartActionBar(title, finishTime, true, function(ply)
 		if (not tickcallback(ply, otherPly)) then return false end
 		if (otherPly.actionBar == nil) then return false end
