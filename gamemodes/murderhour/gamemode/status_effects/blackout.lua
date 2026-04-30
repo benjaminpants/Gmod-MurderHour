@@ -1,20 +1,22 @@
-local knockedOutMod = {
-	[ "$pp_colour_addr" ] = 0,
-	[ "$pp_colour_addg" ] = 0,
-	[ "$pp_colour_addb" ] = 0,
-	[ "$pp_colour_brightness" ] = 0,
-	[ "$pp_colour_contrast" ] = 0.025,
-	[ "$pp_colour_colour" ] = 10,
-	[ "$pp_colour_mulr" ] = 0,
-	[ "$pp_colour_mulg" ] = 0,
-	[ "$pp_colour_mulb" ] = 0
-}
+if (CLIENT) then
+	local knockedOutMod = {
+		[ "$pp_colour_addr" ] = 0,
+		[ "$pp_colour_addg" ] = 0,
+		[ "$pp_colour_addb" ] = 0,
+		[ "$pp_colour_brightness" ] = 0,
+		[ "$pp_colour_contrast" ] = 0.025,
+		[ "$pp_colour_colour" ] = 10,
+		[ "$pp_colour_mulr" ] = 0,
+		[ "$pp_colour_mulg" ] = 0,
+		[ "$pp_colour_mulb" ] = 0
+	}
 
-hook.Add("RenderScreenspaceEffects", "MHKnockoutEffects", function()
-	if (LocalPlayer():GetStatusStrength("blackout") > 1) then
-		DrawColorModify(knockedOutMod)
-	end
-end)
+	hook.Add("RenderScreenspaceEffects", "MHKnockoutEffects", function()
+		if (LocalPlayer():GetStatusStrength("blackout") > 1) then
+			DrawColorModify(knockedOutMod)
+		end
+	end)
+end
 
 return {
 	blackout = {
