@@ -1,3 +1,5 @@
+local boneBreakSounds = {"npc/barnacle/neck_snap1.wav", "npc/barnacle/neck_snap2.wav"}
+
 return {
 	left_leg_broken = {
 		timed=true,

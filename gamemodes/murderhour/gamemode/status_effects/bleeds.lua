@@ -1,3 +1,14 @@
+local function DoBleedDamage(ply, amount)
+	local dmginfo = DamageInfo()
+	dmginfo:SetAttacker(ply)
+	dmginfo:SetInflictor(ply)
+	dmginfo:SetDamageType(DMG_DIRECT)
+	dmginfo:SetDamage(amount)
+	ply:EmitSound("physics/flesh/flesh_bloody_impact_hard1.wav", 50)
+	//ply.supressDamageSound = true
+	ply:TakeDamageInfo(dmginfo)
+end
+
 return {
 	bleed_steady = {
 		timed=true,
