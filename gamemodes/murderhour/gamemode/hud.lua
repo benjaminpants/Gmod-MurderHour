@@ -1,6 +1,4 @@
-include("shared.lua")
-
-// this code is horrible
+-- this code is horrible
 
 surface.CreateFont("PrimaryHudFont", {
 	font = "Roboto",

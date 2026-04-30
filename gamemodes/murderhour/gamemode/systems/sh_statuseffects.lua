@@ -18,66 +18,6 @@ end
 
 // todo: implement system where we scan for files and add the status effects located within
 GM.StatusEffects = {
-	exhausted = {
-		timed=false,
-		hidden=false,
-		assess_display=false,
-		OnAdd = function(ply, effectData)
-			ply:SprintDisable()
-			ply:EmitSound("player/breathe1.wav", 40)
-			ply:ViewPunch(Angle(7,0,0))
-			effectData.highest_seen = gamemode.Call("CalculatePracticalHeartBPM", ply)
-			effectData.time = 1
-		end,
-		OnRemove = function(ply, _)
-			ply:SprintEnable()
-			ply:StopSound("player/breathe1.wav")
-		end,
-		OnTick = function(ply, effectData)
-			local playerBPM = gamemode.Call("CalculatePracticalHeartBPM", ply)
-			if (playerBPM > effectData.highest_seen) then
-				effectData.highest_seen = playerBPM
-			end
-			effectData.time = math.max(playerBPM - ply.restingBPM, 0) / (effectData.highest_seen - ply.restingBPM)
-			if ((playerBPM <= ply.restingBPM)) then
-				return ENUM_STATE_RETURN_STOP
-			end
-			return ENUM_STATE_RETURN_UPDATE
-		end
-	},
-	drunk = {
-		timed=true,
-		hidden=false,
-		assess_display=true,
-		OnAdd = function(ply, effectData)
-			if (effectData.strength >= 4) then
-				effectData.blackout_time = CurTime() + math.random(20,40)
-			end
-		end,
-		OnUpdated = function(ply, effectData)
-			if (effectData.strength >= 4) then
-				effectData.blackout_time = CurTime() + math.random(20,40)
-			end
-		end,
-		OnTick = function(ply, effectData)
-			if (effectData.strength >= 4) then
-				if (CurTime() >= effectData.blackout_time) then
-					return ENUM_STATE_RETURN_STOP
-				end
-			end
-			return ENUM_STATE_RETURN_CONTINUE
-		end,
-		OnRemove = function(ply, effectData)
-			if (not ply:Alive()) then return end
-			if (effectData.strength >= 4) then
-				local strength = 2
-				if (effectData.strength >= 5) then
-					strength = 3
-				end
-				ply:AddOrUpdateStatusEffect("blackout", math.random(30,60), strength)
-			end
-		end
-	},
 	left_leg_broken = {
 		timed=true,
 		hidden=false,
@@ -143,6 +83,18 @@ GM.StatusEffects = {
 		assess_display=true,
 	}
 }
+
+local statusFiles = file.Find("murderhour/gamemode/status_effects/*", "LUA")
+
+for _, v in ipairs(statusFiles) do
+	print("Adding status effects from " .. v)
+	AddCSLuaFile("murderhour/gamemode/status_effects/" .. v)
+	local toAdd = include("murderhour/gamemode/status_effects/" .. v)
+	for statid, statdata in pairs(toAdd) do
+		GM.StatusEffects[statid] = statdata
+		print(" Adding: " .. statid)
+	end
+end
 
 // some functions that should be shared between client and server
 local playerMeta = FindMetaTable("Player")
