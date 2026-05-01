@@ -76,6 +76,14 @@ GM.PropsToReplace = {
 		entity="weapon_murdh_suitcase",
 		useOriginalModel=false
 	},
+	["models/props_interiors/pot02a.mdl"]={
+		entity="weapon_murdh_pan",
+		useOriginalModel=true
+	},
+	["models/props_c17/metalpot002a.mdl"]={
+		entity="weapon_murdh_pan",
+		useOriginalModel=true
+	},
 }
 
 -- TODO: move these to hooks
