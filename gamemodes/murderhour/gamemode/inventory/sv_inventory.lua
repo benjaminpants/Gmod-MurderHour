@@ -41,7 +41,7 @@ end
 
 function inventoryMeta:Remove(entity)
 	if (not entity:IsInInventory()) then
-		error("Attempted to remove entity from inventory that isn't in an inventory!")
+		print("Attempted to remove entity from inventory that isn't in an inventory!")
 		return false
 	end
 	for k, v in ipairs(self.contents) do

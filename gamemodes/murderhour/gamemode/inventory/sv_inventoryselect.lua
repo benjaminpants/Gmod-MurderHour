@@ -16,7 +16,12 @@ local function HolsterWeaponIfExists(wep, newWep)
 	return wep:Holster(newWep)
 end
 
+function GM:CanSwitchInventory(ply)
+	return (ply:Alive() and (not ply.ragdolled))
+end
+
 net.Receive("InventorySelect", function(len, ply)
+	if (not gamemode.Call("CanSwitchInventory", ply)) then return end
 	local inventory = ply.inventory
 	local entityToFind = NULL
 	local isTossing = (not net.ReadBool())
