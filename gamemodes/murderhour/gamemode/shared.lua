@@ -9,9 +9,11 @@ if (SERVER) then
 	AddCSLuaFile("inventory/cl_container.lua")
 	AddCSLuaFile("ui/sh_question.lua")
 	AddCSLuaFile("sh_localizedchatprint.lua")
+	AddCSLuaFile("sh_recipes.lua")
 end
 
 // include all other shared files
+include("sh_recipes.lua")
 include("sh_localizedchatprint.lua")
 include("systems/sh_statuseffects.lua")
 include("systems/sh_stats.lua")

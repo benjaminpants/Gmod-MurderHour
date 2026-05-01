@@ -9,6 +9,7 @@ SWEP.Purpose = "The red part tastes good, not so much the rest."
 SWEP.HungerRestore=11
 SWEP.ThirstRestore=8
 SWEP.Breakable = true
+SWEP.IsFoodIngredient = true
 
 SWEP.ViewmodelRender = 
 {

@@ -45,8 +45,12 @@ function playerMeta:DropWeaponGently(weapon)
 	else
 		self:DropWeapon(weapon, nil, Vector(0,0,0))
 	end
+	local eyeAngles = self:EyeAngles()
 	--weapon:SetPos(eyeTrace.HitPos)
-	weapon:SetAngles(Vector(0,1,0):AngleEx(eyeTrace.HitNormal))
+	local newAng = Vector(0,1,0):AngleEx(eyeTrace.HitNormal)
+	weapon:SetAngles(newAng)
+	newAng:RotateAroundAxis(weapon:GetUp(), eyeAngles.yaw + (weapon.GentleDropAngleOff or 0))
+	weapon:SetAngles(newAng)
 	-- after we figure out (roughly) what the player is trying to aim at, get the position by using a hullcast
 
 	local physOb = weapon:GetPhysicsObject()

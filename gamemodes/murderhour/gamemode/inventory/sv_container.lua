@@ -36,6 +36,9 @@ function ContainerAddBaseFunctions(tab)
 		table.insert(self.transferingWith, ply)
 		self:ContainerSendInvTo(ply)
 	end
+	tab.ContainerItemTransfered = function(self,item,from,to)
+
+	end
 	tab.ContainerTransferEnded = function(self,ply)
 
 	end
@@ -69,11 +72,13 @@ net.Receive("NetworkContainerTransfer", function(len, ply)
 		if (ply.inventory:CanFit(targetEnt)) then
 			currentContainer:RemoveFromInventory(targetEnt)
 			ply:AddToInventory(targetEnt)
+			currentContainer:ContainerItemTransfered(targetEnt,currentContainer, ply)
 		end
 	elseif (ply:InventoryContains(targetEnt)) then -- if the target is one of their items, they want to deposit it
 		if (currentContainer.inventory:CanFit(targetEnt) and currentContainer:ContainerCanFit(targetEnt)) then
 			ply:DropInvWeapon(targetEnt)
 			currentContainer:AddToInventory(targetEnt)
+			currentContainer:ContainerItemTransfered(targetEnt,ply,currentContainer)
 		end
 	end
 	currentContainer:ContainerSendInvTo(currentContainer.transferingWith)

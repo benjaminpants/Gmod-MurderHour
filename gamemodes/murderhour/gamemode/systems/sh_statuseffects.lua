@@ -61,6 +61,14 @@ function playerMeta:GetStatusEffectFromUUID(uuid)
 	return self.statuses[index]
 end
 
+function playerMeta:GetStatusEffectFromType(id)
+	if (self.statuses == nil) then return nil end
+	for _, v in ipairs(self.statuses) do
+		if (v.id == id) then return v end
+	end
+	return nil
+end
+
 function GM:SetupMove(ply, mv, cmd)
 	local brokenLegValue = 0
 	if (ply:HasStatusEffect("left_leg_broken")) then

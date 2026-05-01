@@ -9,6 +9,7 @@ SWEP.Purpose = "Tasty fruit. Can be cut with a knife."
 SWEP.HungerRestore=10
 SWEP.ThirstRestore=2
 SWEP.Breakable = true
+SWEP.IsFoodIngredient = true
 
 SWEP.ViewmodelRender = 
 {

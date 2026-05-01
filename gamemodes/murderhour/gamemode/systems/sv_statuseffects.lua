@@ -79,7 +79,24 @@ function playerMeta:AddStatusEffect(id, time, strength)
 	self:AddStatusEffectManual(data)
 end
 
-function playerMeta:AddOrUpdateStatusEffect(id, time, strength)
+function playerMeta:IncreaseStatusEffectStrenth(id, strength, max, timeifnotpresent)
+	if (not self:Alive()) then return end
+	if (not self:HasStatusEffect(id)) then
+		self:AddStatusEffect(id,time,timeifnotpresent)
+		return
+	end
+	if (self.statuses == nil) then return end
+	for i, v in ipairs(self.statuses) do
+		if (v.id == id) then
+			v.strength = math.max(math.min(v.strength + strength, max),1)
+			gamemode.Call("CallStatusEffectFunction", self, v, "OnUpdated")
+			self:UpdateStatusEffect(v.uuid)
+			return
+		end
+	end
+end
+
+function playerMeta:AddOrUpdateStatusEffect(id, time, strength, force)
 	if (not self:Alive()) then return end
 	if (not self:HasStatusEffect(id)) then
 		self:AddStatusEffect(id,time,strength)
@@ -96,7 +113,7 @@ function playerMeta:AddOrUpdateStatusEffect(id, time, strength)
 				end
 			end
 			if (strength ~= nil) then
-				if (strength > v.strength) then
+				if ((strength > v.strength) || force) then
 					v.strength = strength
 				end
 			end

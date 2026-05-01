@@ -20,6 +20,8 @@ SWEP.HullMaxs = Vector(10,10,10)
 SWEP.GoesInInventory = true
 SWEP.Breakable = false
 SWEP.UseDistance = 100
+SWEP.IsFoodIngredient = false
+SWEP.GentleDropAngleOff = 0
 
 --Render options
 SWEP.UsesRenderableSystem = false --Should the tool use Bacon's nightmare rendering?

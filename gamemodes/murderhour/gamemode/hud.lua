@@ -157,9 +157,7 @@ function HUD()
 	end
 	for index=1, #client.statuses do
 		local currentStatus = client.statuses[index]
-		if (GAMEMODE.StatusEffects[currentStatus.id].hidden_client) then
-			continue
-		end
+		if (GAMEMODE.StatusEffects[currentStatus.id].hidden_client) then continue end
 		local progress = currentStatus.time
 		if (GAMEMODE.StatusEffects[currentStatus.id].timed) then
 			progress = (currentStatus.time - CurTime()) / (currentStatus.time - currentStatus.time_applied)
@@ -223,6 +221,7 @@ function GM:HUDDrawTargetID()
 	else
 		if (trace.Entity.GetTargetID ~= nil) then
 			text = trace.Entity:GetTargetID()
+			if (text == nil) then return end
 		else
 			return
 		end

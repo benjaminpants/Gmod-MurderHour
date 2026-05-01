@@ -128,6 +128,12 @@ end
 
 function GM:ModifyPracticalHeartBPM(ply, result)
 	result[1] = result[1] - (ply:GetStatusStrength("drunk") * 11)
+	local blackout = ply:GetStatusEffectFromType("blackout")
+	if (blackout == nil) then return end
+	if (blackout.strength >= 3) then
+		local progress = (blackout.time - CurTime()) / (blackout.time - blackout.time_applied)
+		result[1] = result[1] * progress
+	end
 end
 
 // do this to reduce the load on the gc
