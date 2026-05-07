@@ -40,6 +40,7 @@ function SWEP:SetupDataTables()
 	self:NetworkVar("String", "CurrentRecipe")
 	self:NetworkVar("Float", "RecipeCompletionTime")
 	self:NetworkVar("Bool", "NeedsStirring")
+	self:NetworkVar("Bool", "RecipeFailed")
 end
 
 function SWEP:Deploy()
@@ -54,8 +55,12 @@ function SWEP:Initialize()
 		self:AddInventory(6, {}, true)
 		self:InitContainer()
 		self:SetCurrentRecipe("")
+		self:SetRecipeCompletionTime(0)
+		self:SetRecipeFailed(false)
 	end
 	self.stirTimes = {}
+	self.stirMissDelay = 0
+	self.simmerSound = nil
 end
 
 function SWEP:CanBeHolstered()
@@ -168,13 +173,19 @@ function SWEP:HasContents()
 end
 
 function SWEP:AskQuestion(ply)
-	local potentialOptions = {"pickup"}
+	local potentialOptions = {}
+	if (self:GetRecipeCompletionTime() == 0) then
+		table.insert(potentialOptions, "pickup")
+	end
 	if (self:GetCurrentRecipe() == "") then
 		table.insert(potentialOptions, "putin")
 		table.insert(potentialOptions, "mix")
 	else
-		table.insert(potentialOptions, "stir")
-		table.insert(potentialOptions, "trash")
+		if (self:GetRecipeFailed()) then
+			table.insert(potentialOptions, "trash")
+		else
+			table.insert(potentialOptions, "stir")
+		end
 	end
 	local checkFunc = nil
 	ply:SendQuestion("#murderhour.interact", potentialOptions, function(ply, message)
@@ -200,22 +211,65 @@ function SWEP:MessageResponse(ply, message)
 		self:TryRecipe()
 		self:EmitSound("ambient/water/water_splash1.wav", 50, 200)
 	elseif (message == "stir") then
-		self:EmitSound("ambient/water/water_splash2.wav", 50, 200)
-		print("stir")
+		if (self:GetNeedsStirring()) then
+			self:EmitSound("ambient/water/water_splash3.wav", 50, 150) -- WHY IS THIS SOUND NOT PLAYING!!!
+			table.remove(self.stirTimes, 1)
+			self:SetNeedsStirring(false)
+		end
 	elseif (message == "trash") then
 		self:SetCurrentRecipe("")
 		self:EmitSound("ambient/water/water_splash3.wav", 50, 75)
+		self.stirTimes = {}
+		self.stirMissDelay = 0
 	end
 end
 
 function SWEP:TryRecipe()
 	local id, recipe = gamemode.Call("FindMatchingCookingRecipe", self.inventory.contents)
 	if (id == nil) then return end
-	self:SetCurrentRecipe(id)
 	for k, v in ipairs(self.inventory.contents) do
 		v:Remove()
 	end
 	self.inventory.contents = {}
+	self.stirTimes = {}
+	self.stirMissDelay = recipe.stirMissDelay
+	for i=1, #recipe.stirIntervals do
+		table.insert(self.stirTimes, CurTime() + (recipe.stirIntervals[i] + (recipe.stirVariance + ((math.random() - 0.5) * 2))))
+	end
+	self:SetRecipeCompletionTime(CurTime() + recipe.cookTime)
+	self:SetRecipeFailed(false)
+	self:SetCurrentRecipe(id)
+	self.simmerSound = CreateSound(self, "player/general/flesh_burn.wav")
+	self.simmerSound:SetSoundLevel(45)
+	self.simmerSound:Play()
+end
+
+function SWEP:OnTick()
+	self:ContainerTick()
+	if (self:GetRecipeFailed()) then return end -- recipe failed, nothing to be done
+	if (self:GetCurrentRecipe() == "") then return end -- no need to do anything, no recipe
+	if (CurTime() >= self:GetRecipeCompletionTime()) then
+		print("recipe complete!")
+		print("todo: create food item(s) and put them in pot?")
+		self:SetRecipeCompletionTime(0)
+		self:SetCurrentRecipe("")
+		self:SetNeedsStirring(false)
+		self.simmerSound:Stop()
+		return
+	end
+	if (#self.stirTimes <= 0) then return end
+	if (CurTime() >= self.stirTimes[1]) then
+		if (not self:GetNeedsStirring()) then
+			self:SetNeedsStirring(true)
+		end
+		if (CurTime() >= (self.stirTimes[1] + self.stirMissDelay)) then
+			print("failed!")
+			self:SetRecipeFailed(true)
+			self:SetRecipeCompletionTime(0)
+			self:SetNeedsStirring(false)
+			self.simmerSound:Stop()
+		end
+	end
 end
 
 function SWEP:ContainerItemTransfered(self,item,from,to)
@@ -249,7 +303,7 @@ function SWEP:DrawWorldModel(flags)
 
 	if (self:IsInInventory() and (not IsValid(self:GetOwner()))) then return end -- dont draw if in inventory AND we aren't actively equipped
 	if (IsValid(self:GetOwner())) then return end
-	if (not elf:GetNeedsStirring()) then return end
+	if (not self:GetNeedsStirring()) then return end
 	local mins, maxs = self:GetModelBounds()
 	local pos = self:GetPos() + Vector( 0, 0, maxs.z + 16 )
 

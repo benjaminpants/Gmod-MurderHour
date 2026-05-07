@@ -8,15 +8,15 @@ GM.CookingRecipes = {
 			weapon_murdh_orange=3
 		},
 		requiredTemp=ENUM_TEMPERATURE_HOT,
-		cookTime=10,
+		cookTime=30,
 		stirIntervals = {
 			3,
-			7,
-			8,
-			9,
+			10,
+			14,
+			25,
 		},
-		stirMissDelay=0.4,
-		stirVariance=0.25
+		stirMissDelay=2,
+		stirVariance=1
 	}
 }
 

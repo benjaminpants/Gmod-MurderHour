@@ -175,7 +175,7 @@ function GM:Tick()
 		self:PlayerPostMainTick(ply)
 	end
 
-	for _, v in ipairs(ents.FindByClass("murdh_*" )) do
+	for _, v in ipairs(ents.FindByClass("weapon_murdh_*" )) do
 		if (v.OnTick ~= nil) then
 			v:OnTick()
 		end
