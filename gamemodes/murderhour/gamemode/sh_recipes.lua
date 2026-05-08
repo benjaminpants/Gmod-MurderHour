@@ -17,6 +17,22 @@ GM.CookingRecipes = {
 		},
 		stirMissDelay=2,
 		stirVariance=1
+	},
+	tomato_soup = {
+		ingredients = {
+			weapon_murdh_tomato=3
+		},
+		requiredTemp=ENUM_TEMPERATURE_HOT,
+		cookTime=60,
+		stirIntervals = {
+			10,
+			30,
+			40,
+			45,
+			55,
+		},
+		stirMissDelay=2,
+		stirVariance=2
 	}
 }
 
