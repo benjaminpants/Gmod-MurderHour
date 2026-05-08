@@ -14,8 +14,14 @@ function playerMeta:SetHunger(hunger)
 	self.statsChanged = true
 end
 
+function playerMeta:StatsShouldDrain()
+	if (not statDrainConvar:GetBool()) then return false end
+	if (self:HasStatusEffect("satiated")) then return false end
+	return true
+end
+
 function playerMeta:AddHunger(amount)
-	if ((not statDrainConvar:GetBool()) and (amount < 0)) then return end
+	if ((not self:StatsShouldDrain()) and (amount < 0)) then return end
 	local toSet = math.max(math.min(self:GetHunger() + amount,100),0)
 	self:SetHunger(toSet)
 end
@@ -31,7 +37,7 @@ function playerMeta:SetThirst(thirst)
 end
 
 function playerMeta:AddThirst(amount)
-	if ((not statDrainConvar:GetBool()) and (amount < 0)) then return end
+	if ((not self:StatsShouldDrain()) and (amount < 0)) then return end
 	local toSet = math.max(math.min(self:GetThirst() + amount,100),0)
 	self:SetThirst(toSet)
 end

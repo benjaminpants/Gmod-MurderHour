@@ -43,7 +43,7 @@ function SWEP:Initialize()
 	self.ActivityTranslate[ ACT_RANGE_ATTACK1 ]					= index + 8 -- Is this right? Is this for NPCs?
 end
 
-local potentialContents = {"weapon_murdh_melonslice", "weapon_murdh_glock", "weapon_murdh_knife", "weapon_murdh_water", "weapon_murdh_beer", "weapon_murdh_mp7", "weapon_murdh_silencedpistol"}
+local potentialContents = {"weapon_murdh_melonchunk", "weapon_murdh_glock", "weapon_murdh_knife", "weapon_murdh_water", "weapon_murdh_beer", "weapon_murdh_mp7", "weapon_murdh_silencedpistol"}
 
 function SWEP:OnLoadedViaReplacement()
 	self:SetupInventory({})

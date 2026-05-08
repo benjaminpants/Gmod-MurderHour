@@ -31,7 +31,7 @@ Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
 
 function SWEP:PrepareGib(velocity)
 	for i=1,3 do
-		local entity = ents.Create("weapon_murdh_melonslice")
+		local entity = ents.Create("weapon_murdh_melonchunk")
 		entity:SetPos(self:GetPos())
 		entity:SetAngles(Angle(math.random(-360,360)),Angle(math.random(-360,360)),Angle(math.random(-360,360)))
 		entity:Spawn()
