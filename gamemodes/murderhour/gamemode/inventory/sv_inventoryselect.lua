@@ -35,11 +35,17 @@ net.Receive("InventorySelect", function(len, ply)
 	entityToFind = net.ReadEntity()
 	-- player selected hands/nothing
 	if (not IsValid(entityToFind)) then
-		local hands = ply:GetWeapon("weapon_murdh_hands")
-		if (not HolsterWeaponIfExists(ply:GetActiveWeapon(), hands)) then return end
-		DropHeldAndRemoveIfAppropiate(ply, ply:GetActiveWeapon())
-		ply:SelectWeapon(hands)
-		return
+		if (inventory:IsFull()) then
+			-- dirty dirty stinky hacker. or weird networking error.
+			-- either way just set entityToFind to be the most recently added thing in the inventory as a work around
+			entityToFind = inventory.contents[#inventory.contents]
+		else
+			local hands = ply:GetWeapon("weapon_murdh_hands")
+			if (not HolsterWeaponIfExists(ply:GetActiveWeapon(), hands)) then return end
+			DropHeldAndRemoveIfAppropiate(ply, ply:GetActiveWeapon())
+			ply:SelectWeapon(hands)
+			return
+		end
 	end
 	if (entityToFind == ply:GetActiveWeapon()) then return end
 	if (not inventory:Contains(entityToFind)) then return end

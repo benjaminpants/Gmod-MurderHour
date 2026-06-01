@@ -49,7 +49,7 @@ function MHInventory:CanFit(entity)
 	return (#self.contents) < self.limit
 end
 
-function MHInventory:IsFull(entity)
+function MHInventory:IsFull()
 	return (#self.contents) >= self.limit
 end
 

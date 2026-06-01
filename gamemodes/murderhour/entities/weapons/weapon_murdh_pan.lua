@@ -14,20 +14,20 @@ SWEP.PrintName = "Pan"
 SWEP.Primary.ChargeTimes = {2,5,7}
 SWEP.GentleDropAngleOff = 180
 
-SWEP.ViewmodelRender = 
+SWEP.ViewmodelRender = {
 {
 Model="models/props_interiors/pot02a.mdl", --Model to render.
 PosOffset=Vector(2,-2.5,-7), --Position offset.
 AngOffset=Angle(0,90,-90), --Angular offset.
 Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
-}
-SWEP.WorldmodelRender = 
+}}
+SWEP.WorldmodelRender = {
 {
 Model="models/props_interiors/pot02a.mdl", --Model to render.
 PosOffset=Vector(4.5,-1,-4), --Position offset.
 AngOffset=Angle(0,90,-90), --Angular offset.
 Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
-}
+}}
 SWEP.UsesRenderableSystem = true
 SWEP.HideWeaponModel=true
 SWEP.HitSounds = {"phx/epicmetal_hard.wav", "phx/epicmetal_hard1.wav", "phx/epicmetal_hard2.wav", "phx/epicmetal_hard3.wav", "phx/epicmetal_hard4.wav", "phx/epicmetal_hard5.wav", "phx/epicmetal_hard6.wav"}

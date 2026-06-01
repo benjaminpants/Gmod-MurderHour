@@ -25,14 +25,16 @@ SWEP.GentleDropAngleOff = 0
 
 --Render options
 SWEP.UsesRenderableSystem = false --Should the tool use Bacon's nightmare rendering?
-SWEP.ViewmodelRender =  --This is just a template for easier understanding.
+SWEP.UsesRenderableSystemInWorld = false
+SWEP.ViewmodelRender = { --This is just a template for easier understanding.
 {
 Model = "models/weapons/w_grenade.mdl", --Model to render.
 PosOffset = Vector(0,0,0), --Position offset.
 AngOffset = Angle(0,0,0), --Angular offset.
 Bone = "ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
-}
+}}
 SWEP.WorldmodelRender = nil --For any good GMod rig this can just be the same as the viewmodel render if it's attached to the hand. --UsesRenderableSystem must be true.
+SWEP.GroundedWorldmodelRender = nil
 SWEP.HideWeaponModel=false --Can be used without UsesRenderableSystem being true, but why would you do that.
 
 function SWEP:Initialize()
@@ -177,29 +179,38 @@ function SWEP:Holster(wep) --Same reason as above why this doesn't check UsesRen
 	return true
 end
 
-function SWEP:GeneralRenderFunction(host,renderable, flags) --Host is either the viewmodel or the character.
+function SWEP:GeneralRenderFunction(host,renderableList, flags, ignoreBones) --Host is either the viewmodel or the character.
 	if (self.UsesRenderableSystem~=true) then return end
 	if (not IsValid(host)) then return end --Host does not exist.
-	if (renderable == nil) then return end --Renderable does not exist.
-	local offsetvec = renderable.PosOffset
-	local offsetang = renderable.AngOffset
-	local boneid = host:LookupBone(renderable.Bone)
-	if not boneid then
-		return
+	if (renderableList == nil) then return end --Renderable does not exist.
+	for _, renderable in ipairs(renderableList) do
+		local offsetvec = renderable.PosOffset
+		local offsetang = renderable.AngOffset
+
+		local matrix = nil
+
+		if (not ignoreBones) then
+			local boneid = host:LookupBone(renderable.Bone)
+			if not boneid then
+				continue
+			end
+			matrix = host:GetBoneMatrix( boneid )
+		else
+			matrix = host:GetWorldTransformMatrix()
+		end
+		
+		if not matrix then 
+			continue 
+		end
+		local newpos, newang = LocalToWorld( offsetvec, offsetang, matrix:GetTranslation(), matrix:GetAngles() )
+		local modelexample = ClientsideModel(renderable.Model)
+		modelexample:SetNoDraw( true )
+		modelexample:SetPos( newpos )
+		modelexample:SetAngles( newang )
+		modelexample:SetupBones()
+		modelexample:DrawModel()
+		modelexample:Remove()
 	end
-	local matrix = host:GetBoneMatrix( boneid )
-	
-	if not matrix then 
-		return 
-	end
-	local newpos, newang = LocalToWorld( offsetvec, offsetang, matrix:GetTranslation(), matrix:GetAngles() )
-	local modelexample = ClientsideModel(renderable.Model)
-	modelexample:SetNoDraw( true )
-	modelexample:SetPos( newpos )
-	modelexample:SetAngles( newang )
-	modelexample:SetupBones()
-	modelexample:DrawModel()
-	modelexample:Remove()
 end
 
 --The rendering nightmare--
@@ -212,7 +223,11 @@ end
 function SWEP:DrawWorldModel(flags)
 	if (self:IsInInventory() and (not IsValid(self:GetOwner()))) then return end -- dont draw if in inventory AND we aren't actively equipped
 	if (not IsValid(self:GetOwner())) or (self.UsesRenderableSystem == false) then --If we're not using the render system, it's prob a bonemergable weapon so render it always.
-		self:DrawModel(flags) --So the world model doesn't just vaporize.
+		if (not self.UsesRenderableSystemInWorld) then
+			self:DrawModel(flags) --So the world model doesn't just vaporize.
+		else
+			self:GeneralRenderFunction(self, self.GroundedWorldmodelRender, flags, true)
+		end
 	end
 	if (self.UsesRenderableSystem==true) and (self.WorldmodelRender~=nil) then
 		local vm=self:GetOwner()

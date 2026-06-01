@@ -19,13 +19,13 @@ SWEP.LockpickSounds = {
 	"weapons/357/357_reload4.wav",
 }
 
-SWEP.WorldmodelRender = 
+SWEP.WorldmodelRender = {
 {
 	Model="models/props_c17/SuitCase_Passenger_Physics.mdl", --Model to render.
 	PosOffset=Vector(4.5,-0.5,0), --Position offset.
 	AngOffset=Angle(-90,-10,9), --Angular offset.
 	Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
-}
+}}
 SWEP.UsesRenderableSystem = true
 
 

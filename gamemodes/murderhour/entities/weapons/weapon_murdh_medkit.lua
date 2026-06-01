@@ -11,13 +11,13 @@ SWEP.CanBeLocked = false
 SWEP.CanBeLockPicked = false
 SWEP.CanBeOwned = false
 SWEP.InitializeInventoryOnInit = true
-SWEP.WorldmodelRender = 
+SWEP.WorldmodelRender = {
 {
 	Model="models/muzhik/props/aptechka/aptechka.mdl", --Model to render.
 	PosOffset=Vector(20,1,-2.5), --Position offset.
 	AngOffset=Angle(0,90,-90), --Angular offset.
 	Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
-}
+}}
 SWEP.UsesRenderableSystem = true
 SWEP.StartingItems = {"weapon_murdh_bandages", "weapon_murdh_bandages", "weapon_murdh_bandages"}
 SWEP.ItemsThatCanFit = {
@@ -52,8 +52,6 @@ function SWEP:SetupInventory(owners)
 end
 
 local matrix = Matrix()
-
-local upVec = Vector(0,0,1)
 
 function SWEP:CalcViewModelView(vm, oldEyePos, oldEyeAng, eyePos, eyeAng)
 	matrix:SetTranslation(eyePos)

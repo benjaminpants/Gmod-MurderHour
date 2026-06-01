@@ -14,20 +14,20 @@ SWEP.Pocketable = false
 SWEP.ViewModel = "models/weapons/cstrike/c_pist_elite.mdl"
 SWEP.WorldModel = "models/props_junk/watermelon01.mdl"
 
-SWEP.ViewmodelRender = 
+SWEP.ViewmodelRender = {
 {
 Model="models/props_junk/watermelon01.mdl", --Model to render.
 PosOffset=Vector(5,-8.25,4), --Position offset.
 AngOffset=Angle(0,0,-90), --Angular offset.
 Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
-}
-SWEP.WorldmodelRender = 
+}}
+SWEP.WorldmodelRender = {
 {
 Model="models/props_junk/watermelon01.mdl", --Model to render.
 PosOffset=Vector(0,-11,0), --Position offset.
 AngOffset=Angle(90,0,0), --Angular offset.
 Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
-}
+}}
 
 function SWEP:PrepareGib(velocity)
 	for i=1,3 do
