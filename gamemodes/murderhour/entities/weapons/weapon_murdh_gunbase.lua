@@ -38,8 +38,12 @@ function SWEP:PrimaryAttack()
 			self:PrimaryBulletCallback(attack, trace, dmgInfo)
 		end
 	})
-	if owner:IsPlayer() then
-		owner:ViewPunch(self.Primary.Recoil * (math.random(1,20) / 20))
+	if ((owner:IsPlayer()) and (SERVER or (CLIENT and IsFirstTimePredicted()))) then
+		local eyeang = owner:EyeAngles()
+		local recoil = self.Primary.Recoil * (math.random(1,20) / 20)
+
+        owner:SetEyeAngles(eyeang + recoil)
+		owner:ViewPunch(self.Primary.Recoil * 0.1)
 	end
 	self:PlayPrimaryFireSound()
 	self:DoShootEffects()

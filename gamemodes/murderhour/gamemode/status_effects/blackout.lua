@@ -23,12 +23,18 @@ return {
 		OnAdd = function(ply, effectData)
 			ply:Ragdollize(true)
 			-- visually simulate death if we are dying
+			if (effectData.strength >= 2) then
+				ply:SetDSP(131)
+			end
 			if (effectData.strength >= 3) then
 				ply:DropEntireInventory()
 			end
 		end,
 		OnRemove = function(ply, effectData)
 			if (not ply:Alive()) then return end
+			if (effectData.strength >= 2) then
+				ply:SetDSP(1)
+			end
 			if (effectData.strength >= 3) then
 				ply:Kill() // kill the player, bye bye!
 				return
