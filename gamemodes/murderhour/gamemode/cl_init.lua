@@ -8,10 +8,10 @@ include("ui/cl_question.lua")
 include("systems/cl_actionbar.lua")
 include("cl_entityworkaround.lua")
 
-/*
+
 hook.Add("InitPostEntity", "MHDoNetworkHack", function()
 	LocalPlayer():ConCommand("murdh_forcenetworkrefresh")
-end)*/
+end)
 
 function GM:HUDDrawPickupHistory()
 	-- fuck you
