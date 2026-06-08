@@ -47,7 +47,8 @@ function playerMeta:SetBladder(bladder)
 	self.bladder = bladder
 	if (self.bladder >= 100) then
 		self.bladder = 0
-		print("shit yourself now")
+		self:EmitSound("player/footsteps/mud3.wav")
+		self:AddOrUpdateStatusEffect("smelly", 120, 2)
 	end
 	self.statsChanged = true
 end

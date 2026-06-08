@@ -208,7 +208,7 @@ function GM:PlayerPostMainTick(ply)
 	self:HandleHeartbeat(ply)
 	if (ply:Alive()) then
 		ply:AddHunger(-FrameTime() / 8)
-		ply:AddBladder(FrameTime() * (((ply:GetHunger() + ply:GetThirst()) / 200) / 7))
+		ply:AddBladder(FrameTime() * (((ply:GetHunger() + ply:GetThirst()) / 200) / 3))
 	end
 	if (ply.statsChanged) then
 		net.Start("PlayerStats")
