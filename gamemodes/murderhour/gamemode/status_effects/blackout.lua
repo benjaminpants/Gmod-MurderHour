@@ -18,6 +18,13 @@ if (CLIENT) then
 	end)
 end
 
+-- we do this so going from getup to blackout doesnt cause any weirdness...
+hook.Add("SetupMove", "MHBlackoutSetupMove", function(ply, mv, cmd)
+	if ((ply:HasStatusEffect("blackout"))) then
+		mv:SetButtons(bit.band(bit.bor(mv:GetButtons(), IN_DUCK), bit.bnot(IN_JUMP)))
+	end
+end)
+
 return {
 	blackout = {
 		OnAdd = function(ply, effectData)

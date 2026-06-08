@@ -41,3 +41,19 @@ function playerMeta:AddThirst(amount)
 	local toSet = math.max(math.min(self:GetThirst() + amount,100),0)
 	self:SetThirst(toSet)
 end
+
+function playerMeta:SetBladder(bladder)
+	if (bladder == self.bladder) then return end
+	self.bladder = bladder
+	if (self.bladder >= 100) then
+		self.bladder = 0
+		print("shit yourself now")
+	end
+	self.statsChanged = true
+end
+
+function playerMeta:AddBladder(amount)
+	if ((not self:StatsShouldDrain()) and (amount > 0)) then return end
+	local toSet = math.max(math.min(self:GetBladder() + amount,100),0)
+	self:SetBladder(toSet)
+end

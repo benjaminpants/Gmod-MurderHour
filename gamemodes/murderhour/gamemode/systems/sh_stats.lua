@@ -21,3 +21,13 @@ function playerMeta:GetThirst()
 	end
 	return self.thirst
 end
+
+function playerMeta:GetBladder()
+	if (self.bladder == nil) then
+		if (SERVER) then
+			self:SetBladder(0)
+		end
+		return 0
+	end
+	return self.bladder
+end

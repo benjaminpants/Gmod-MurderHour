@@ -70,23 +70,6 @@ function playerMeta:GetStatusEffectFromType(id)
 end
 
 function GM:SetupMove(ply, mv, cmd)
-	local brokenLegValue = 0
-	if (ply:HasStatusEffect("left_leg_broken")) then
-		brokenLegValue = brokenLegValue + 1
-	end
-	if (ply:HasStatusEffect("right_leg_broken")) then
-		brokenLegValue = brokenLegValue + 1
-	end
-	if (brokenLegValue >= 1) then
-		mv:SetMaxClientSpeed(mv:GetMaxClientSpeed() - math.abs(math.sin(CurTime() * 2) * 40))
-	end
-	if (brokenLegValue >= 2) then
-		mv:SetButtons(bit.band(bit.bor(mv:GetButtons(), IN_DUCK), bit.bnot(IN_JUMP)))
-		mv:SetMaxClientSpeed(mv:GetMaxClientSpeed() / 3)
-	end
-	if ((ply:HasStatusEffect("getting_up")) || (ply:HasStatusEffect("blackout"))) then
-		mv:SetButtons(bit.band(bit.bor(mv:GetButtons(), IN_DUCK), bit.bnot(IN_JUMP)))
-	end
 	// drunk logic
 	if (ply:GetStatusStrength("drunk") > 0) then
 		local drunkStrength = ply:GetStatusStrength("drunk")

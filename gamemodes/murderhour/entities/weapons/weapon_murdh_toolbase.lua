@@ -38,6 +38,7 @@ SWEP.GroundedWorldmodelRender = nil
 SWEP.HideWeaponModel=false --Can be used without UsesRenderableSystem being true, but why would you do that.
 
 function SWEP:Initialize()
+	self:SetDeploySpeed(1)
 	self:SetHoldType(self.HoldType)
 	self:AddCallback("PhysicsCollide", self.PhysicsCollide)
 	if (self.Breakable) then

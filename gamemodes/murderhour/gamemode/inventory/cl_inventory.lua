@@ -6,7 +6,13 @@ function inventoryMeta:NetReadInto()
 	self.limit = net.ReadUInt(8)
 	local contentCount = net.ReadUInt(8)
 	for i=1, contentCount do
-		table.insert(self.contents, net.ReadEntity())
+		table.insert(self.contents, NULL)
+		if (netInd ~= 0) then
+			local index = #self.contents
+			EntityWorkaround.WaitForEnt(net.ReadUInt(MAX_EDICT_BITS), function(ent)
+				self.contents[index] = ent
+			end)
+		end
 	end
 	local ownerCount = net.ReadUInt(8)
 	for i=1, ownerCount do

@@ -80,6 +80,13 @@ local iconsToDraw = {
 		getFill=function(client)
 			return client:GetThirst() / 100
 		end
+	},
+	{
+		mat=Material("gui/bladdericon"),
+		borderMat=Material("gui/bladdericon_border"),
+		getFill=function(client)
+			return client:GetBladder() / 100
+		end
 	}
 }
 
@@ -137,7 +144,7 @@ function HUD()
 	DrawMurderLikeIcon(iconsToDraw[1].mat, iconsToDraw[1].borderMat, bgColor, ScrW() * heartX, ScrH() * heartY, resHeartSize, outlineSize, iconsToDraw[1].getFill(client))
 
 	for i=2, #iconsToDraw do
-		local vv = math.rad(132 - ((i - 2) * 32))
+		local vv = math.rad(164 - ((i - 2) * 32))
 		local xx = math.sin(vv) * resHeartSize * 0.9
 		local yy = math.cos(vv) * resHeartSize
 		DrawMurderLikeIcon(iconsToDraw[i].mat, iconsToDraw[i].borderMat, bgColor, (ScrW() * heartX) + xx, (ScrH() * heartY) + yy, resHeartSize / 2, outlineSize, iconsToDraw[i].getFill(client))
@@ -174,7 +181,7 @@ function HUD()
 		local currentStatus = statusesToDraw[index]
 		i = i + 1
 		local textX = (ScrW() * heartX) - (resHeartSize / 2) - (12 * resRefW)
-		local textY = (ScrH() * heartY) - resHeartSize - ((i) * (24 + outlineSize)) - (outlineSize * 2)
+		local textY = (ScrH() * heartY) - resHeartSize - ((i + 1) * (24 + outlineSize)) - (outlineSize * 2)
 		surface.SetDrawColor(0,0,0)
 		surface.DrawRect(textX - (outlineSize / 2),textY - (outlineSize / 2), (barWidth) + outlineSize, 24 + outlineSize)
 		surface.SetDrawColor(bgColor:Unpack())

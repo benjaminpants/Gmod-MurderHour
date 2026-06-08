@@ -4,6 +4,7 @@ AddCSLuaFile("systems/cl_statuseffects.lua")
 AddCSLuaFile("cl_corpses.lua")
 AddCSLuaFile("shared.lua")
 AddCSLuaFile("hud.lua")
+AddCSLuaFile("cl_entityworkaround.lua")
 AddCSLuaFile("hud_weaponselector.lua")
 AddCSLuaFile("systems/cl_stats.lua")
 AddCSLuaFile("inventory/cl_inventory.lua")
@@ -84,8 +85,6 @@ function playerMeta:DropWeaponGently(weapon)
 	physOb:SetAngleVelocity(Vector(0,0,0))
 end
 
-// TODO: move heart system to its own lua file, and rewrite the heart calculation stuff to be more modular so status effects like Energized and Drunk can affect it
-
 function GM:PlayerSpawn(ply)
 	ply:SetPlayerColor(HSLToColor(math.random(0,360), 1, math.random(20,100) / 100):ToVector())
 	
@@ -113,6 +112,7 @@ function GM:PlayerSpawn(ply)
 	ply:SilenceVoiceline()
 	ply.hunger = 100
 	ply.thirst = 100
+	ply.bladder = 0
 	ply:SetHunger(100)
 	ply:AddInventory(3, {ply}, false)
 	local suitCase = ply:ForceGive("weapon_murdh_suitcase")
@@ -191,10 +191,14 @@ local playerStatTab = {
 }
 
 function GM:PlayerCanClimbLadder(ply)
-	if ((ply:HasStatusEffectAtStrength("left_leg_broken", 2)) and (ply:HasStatusEffectAtStrength("right_leg_broken", 2))) then
-		return false
-	end
 	return true
+end
+
+function GM:GetFallDamage(ply, spd)
+	if (ply:Crouching()) then
+		return spd / 25
+	end
+	return spd / 20
 end
 
 function GM:PlayerPostMainTick(ply)
@@ -204,11 +208,13 @@ function GM:PlayerPostMainTick(ply)
 	self:HandleHeartbeat(ply)
 	if (ply:Alive()) then
 		ply:AddHunger(-FrameTime() / 8)
+		ply:AddBladder(FrameTime() * (((ply:GetHunger() + ply:GetThirst()) / 200) / 7))
 	end
 	if (ply.statsChanged) then
 		net.Start("PlayerStats")
 		net.WriteFloat(ply.hunger)
 		net.WriteFloat(ply.thirst)
+		net.WriteFloat(ply.bladder)
 		net.Send(ply)
 		ply.statsChanged = false
 	end
