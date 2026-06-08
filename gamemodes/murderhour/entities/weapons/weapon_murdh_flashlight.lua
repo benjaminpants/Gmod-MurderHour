@@ -2,7 +2,7 @@ AddCSLuaFile()
 SWEP.Base = "weapon_murdh_toolbase"
 
 SWEP.ViewModel = "models/weapons/c_shotgun.mdl"
-SWEP.WorldModel = "models/maxofs2d/lamp_flashlight.mdl"
+SWEP.WorldModel = "models/raviool/flashlight.mdl"
 SWEP.HoldType = "pistol"
 SWEP.UseHands = true
 SWEP.PrintName = "Flashlight"
@@ -11,7 +11,7 @@ SWEP.UsesRenderableSystem = true
 
 SWEP.ViewmodelRender = {
 {
-Model="models/maxofs2d/lamp_flashlight.mdl", --Model to render.
+Model="models/raviool/flashlight.mdl", --Model to render.
 PosOffset=Vector(0,0,0), --Position offset.
 AngOffset=Angle(0,0,0), --Angular offset.
 Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
@@ -19,10 +19,11 @@ Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
 
 SWEP.WorldmodelRender= {
 {
-Model="models/maxofs2d/lamp_flashlight.mdl", --Model to render.
-PosOffset=Vector(16,-3,1), --Position offset.
+Model="models/raviool/flashlight.mdl", --Model to render.
+PosOffset=Vector(3,-1.5,-1.5), --Position offset.
 AngOffset=Angle(0,0,0), --Angular offset.
 Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
+DrawShadow=false
 }}
 
 DEFINE_BASECLASS(SWEP.Base)
@@ -45,6 +46,8 @@ end
 
 function SWEP:OnDrop(owner)
 	if (not SERVER) then return end
+	if (not IsValid(owner)) then return end
+	if (not owner:IsPlayer()) then return end
 	owner:AllowFlashlight(true)
 	owner:Flashlight(false)
 	owner:AllowFlashlight(false)

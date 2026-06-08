@@ -1,0 +1,8 @@
+A basic list of addons the gamemode CURRENTLY depends on.
+flashlight model
+https://steamcommunity.com/sharedfiles/filedetails/?id=186219870
+food models
+https://steamcommunity.com/sharedfiles/filedetails/?id=108024198
+https://steamcommunity.com/sharedfiles/filedetails/?id=311259154
+medkit
+https://steamcommunity.com/sharedfiles/filedetails/?id=2649097795

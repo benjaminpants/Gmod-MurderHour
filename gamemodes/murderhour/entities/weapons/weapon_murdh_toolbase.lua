@@ -209,6 +209,9 @@ function SWEP:GeneralRenderFunction(host,renderableList, flags, ignoreBones) --H
 		modelexample:SetPos( newpos )
 		modelexample:SetAngles( newang )
 		modelexample:SetupBones()
+		if ((renderable.DrawShadow == nil) or (renderable.DrawShadow == true)) then
+			modelexample:DrawShadow()
+		end
 		modelexample:DrawModel()
 		modelexample:Remove()
 	end
