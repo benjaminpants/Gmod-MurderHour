@@ -7,6 +7,24 @@ SWEP.HoldType = "pistol"
 SWEP.UseHands = true
 SWEP.PrintName = "Flashlight"
 
+SWEP.UsesRenderableSystem = true
+
+SWEP.ViewmodelRender = {
+{
+Model="models/maxofs2d/lamp_flashlight.mdl", --Model to render.
+PosOffset=Vector(0,0,0), --Position offset.
+AngOffset=Angle(0,0,0), --Angular offset.
+Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
+}}
+
+SWEP.WorldmodelRender= {
+{
+Model="models/maxofs2d/lamp_flashlight.mdl", --Model to render.
+PosOffset=Vector(16,-3,1), --Position offset.
+AngOffset=Angle(0,0,0), --Angular offset.
+Bone="ValveBiped.Bip01_R_Hand", --Bone the model attaches to.
+}}
+
 DEFINE_BASECLASS(SWEP.Base)
 
 function SWEP:Deploy()
@@ -25,8 +43,9 @@ function SWEP:Holster()
 	return true
 end
 
-function SWEP:DrawWorldModel(flags)
-	if (not self:GetOwner():IsPlayer()) then
-		self:DrawModel(flags)
-	end
+function SWEP:OnDrop(owner)
+	if (not SERVER) then return end
+	owner:AllowFlashlight(true)
+	owner:Flashlight(false)
+	owner:AllowFlashlight(false)
 end
