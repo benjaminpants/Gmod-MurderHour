@@ -23,6 +23,8 @@ SWEP.UseDistance = 100
 SWEP.IsFoodIngredient = false
 SWEP.GentleDropAngleOff = 0
 
+SWEP.SwayScale = 3
+
 --Render options
 SWEP.UsesRenderableSystem = false --Should the tool use Bacon's nightmare rendering?
 SWEP.UsesRenderableSystemInWorld = false
