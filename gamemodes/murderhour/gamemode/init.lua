@@ -307,7 +307,11 @@ function GM:EntityTakeDamage(entity, info)
 		end
 		if (shouldGetScared) then
 			if (info:GetDamage() < 7) then
-				entity:AddOrUpdateStatusEffect("scared", 5, 1)
+				if (not entity:HasStatusEffect("scared")) then
+					entity:AddOrUpdateStatusEffect("scared", 7, 1)
+				else
+					entity:AddOrUpdateStatusEffect("scared", 14, 2)
+				end
 			else
 				if ((entity:Health() <= 30)) then
 					entity:AddOrUpdateStatusEffect("scared", info:GetDamage() * 1.5, 3)
@@ -328,7 +332,7 @@ end
 
 function GM:ScalePlayerDamage(ply, hitgroup, info)
 	if (hitgroup == HITGROUP_HEAD) then
-		info:ScaleDamage(1.7)
+		info:ScaleDamage(1.8)
 		ply:AddOrUpdateStatusEffect("bleed_spurt",11,3)
 	end
 	local hitLeg = false

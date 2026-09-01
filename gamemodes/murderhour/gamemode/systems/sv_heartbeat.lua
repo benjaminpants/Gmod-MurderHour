@@ -52,6 +52,7 @@ function GM:HandleHeartbeat(ply)
 		if (not ply.wasSprintingLastTime) then
 			ply.wasSprintingLastTime = true
 			ply.heartBPM = ply.heartBPM + 5
+			ply:PlayStepSound(0.5)
 		end
 		ply.heartBPM = ply.heartBPM + (delta * 3.5)
 		restMult = 0
