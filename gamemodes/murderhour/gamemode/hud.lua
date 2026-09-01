@@ -205,6 +205,10 @@ net.Receive("PlayerHeartbeat", function()
     heartTimer = 1
 	local rawDif = net.ReadFloat()
 	rawDif = math.min(rawDif,1)
+	if (LocalPlayer().HasStatusEffectAtStrength == nil) then return end
+	if (LocalPlayer():HasStatusEffectAtStrength("blackout", 4)) then
+		rawDif = 1
+	end
 	if (rawDif <= 0.1) then return end -- dont bother
 	EmitSound("player/heartbeat_noloop.wav", Vector(0,0,0), -1, CHAN_AUTO, rawDif)
 end)

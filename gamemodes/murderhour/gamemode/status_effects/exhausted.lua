@@ -1,3 +1,19 @@
+local heartBPMTable = {0}
+
+
+local exhaustBPM = nil
+
+local function CalculateMinExhaustEnd(ply)
+	heartBPMTable[1] = ply.restingBPM
+	gamemode.Call("ModifyPracticalHeartBPMAdditive",ply,heartBPMTable)
+	gamemode.Call("ModifyPracticalHeartBPM",ply,heartBPMTable)
+	if (exhaustBPM == nil) then
+		exhaustBPM = GetConVar("sv_murdh_exhaustionbpm")
+	end
+	return math.min(math.max(heartBPMTable[1], ply.restingBPM),exhaustBPM:GetInt() - 1)
+end
+
+
 return {
 	exhausted = {
 		timed=false,
@@ -19,8 +35,9 @@ return {
 			if (playerBPM > effectData.highest_seen) then
 				effectData.highest_seen = playerBPM
 			end
-			effectData.time = math.max(playerBPM - ply.restingBPM, 0) / (effectData.highest_seen - ply.restingBPM)
-			if ((playerBPM <= ply.restingBPM)) then
+			local restingBPM = CalculateMinExhaustEnd(ply)
+			effectData.time = math.max(playerBPM - restingBPM, 0) / (effectData.highest_seen - restingBPM)
+			if ((playerBPM <= restingBPM)) then
 				return ENUM_STATE_RETURN_STOP
 			end
 			return ENUM_STATE_RETURN_UPDATE

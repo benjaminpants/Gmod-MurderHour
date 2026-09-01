@@ -8,8 +8,20 @@ hook.Add("SetupMove", "MHBrokenLegsSetupMove", function(ply, mv, cmd)
 	if (ply:HasStatusEffect("right_leg_broken")) then
 		brokenLegValue = brokenLegValue + 1
 	end
-	if (brokenLegValue >= 1) then
-		mv:SetMaxClientSpeed(mv:GetMaxClientSpeed() - math.abs(math.sin(CurTime() * 2) * 40))
+	if (ply:IsOnGround()) then
+		if (brokenLegValue >= 1) then
+			if (ply:IsSprinting()) then
+				local brokenSub = (1 - math.pow(math.abs(math.sin(CurTime() * 2)),5)) * 50
+				mv:SetMaxClientSpeed(mv:GetMaxClientSpeed() - brokenSub)
+			else
+				local brokenSub = math.abs(math.sin(CurTime() * 2) * 60)
+				if (brokenSub > 57) then
+					mv:SetMaxClientSpeed(0.01)
+				else
+					mv:SetMaxClientSpeed(mv:GetMaxClientSpeed() - brokenSub)
+				end
+			end
+		end
 	end
 	if (brokenLegValue >= 2) then
 		mv:SetButtons(bit.band(bit.bor(mv:GetButtons(), IN_DUCK), bit.bnot(IN_JUMP)))

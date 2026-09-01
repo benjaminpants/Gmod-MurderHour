@@ -69,17 +69,6 @@ function playerMeta:GetStatusEffectFromType(id)
 	return nil
 end
 
-function GM:SetupMove(ply, mv, cmd)
-	// drunk logic
-	if (ply:GetStatusStrength("drunk") > 0) then
-		local drunkStrength = ply:GetStatusStrength("drunk")
-		local angles = mv:GetMoveAngles()
-		local sinPart = math.sin(CurTime() * 1)
-		angles.yaw = angles.yaw + (math.sin(CurTime() + math.sin(CurTime()/10)) * (math.pow(drunkStrength,math.min(drunkStrength,3)) + 1))
-		mv:SetMoveAngles(angles)
-	end
-end
-
 concommand.Add("murdh_debug_givestatuseffect", function(ply, cmd, args)
 	if (not SERVER) then return end
 	if (#args < 3) then return end

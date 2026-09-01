@@ -1,6 +1,8 @@
 // TODO: move some of these gamemode functions over to be for the player
 // TODO: implement some kind of function for calculating the target heart rate, so it can be modified. (For instance, if holding a weapon, increase the resting heart rate by 10.)
 
+local bpmConvar = CreateConVar("sv_murdh_exhaustionbpm", 130, {FCVAR_REPLICATED, FCVAR_NOTIFY}, "The BPM at which players will become exhausted")
+
 hook.Add("PlayerSpawn", "HeartbeatPlayerSpawn", function(ply)
 	// initialize all the appropiate things for heartbeat
 	ply.heartBPM = 60
@@ -15,7 +17,7 @@ end)
 local heartbeatRestMult = {0}
 function GM:CalculateHeartbeatRestMult(ply, baseV)
 	heartbeatRestMult[1] = baseV
-	self:ModifyHeartbeatRestMult(ply, baseV)
+	gamemode.Call("ModifyHeartbeatRestMult",ply, baseV)
 	return heartbeatRestMult[1]
 end
 
@@ -27,10 +29,8 @@ function GM:HandleHeartbeat(ply)
 	if (not ply:Alive()) then return end // you are dead, no big surprise
 
 	// HEART ATTACK TIME
-	// TODO: change this to give you the Dying status effect
-	if (self:CalculatePracticalHeartBPM(ply) >= (ply.restingBPM * 3)) then
-		ply:Kill()
-		ply:ChatPrint("You died of a heart attack! (Your BPM was: " .. math.ceil(self:CalculatePracticalHeartBPM(ply)) .. "!)")
+	if ((self:CalculatePracticalHeartBPM(ply) >= (ply.restingBPM * 3)) and (not ply:HasStatusEffectAtStrength("blackout",4))) then
+		ply:AddOrUpdateStatusEffect("blackout", 30, 4)
 		return
 	end
 	local delta = FrameTime()
@@ -74,7 +74,7 @@ function GM:HandleHeartbeat(ply)
 	end
 	local practicalBPM = self:CalculatePracticalHeartBPM(ply)
 
-	if ((practicalBPM > 130) and (not ply:HasStatusEffect("exhausted"))) then
+	if ((practicalBPM > bpmConvar:GetInt()) and (not ply:HasStatusEffect("exhausted"))) then
 		ply:AddStatusEffect("exhausted")
 	end
 
@@ -126,8 +126,10 @@ function GM:HandleHeartbeat(ply)
 	end
 end
 
+function GM:ModifyPracticalHeartBPMAdditive(ply, result)
+end
+
 function GM:ModifyPracticalHeartBPM(ply, result)
-	result[1] = result[1] - (ply:GetStatusStrength("drunk") * 11)
 	local blackout = ply:GetStatusEffectFromType("blackout")
 	if (blackout == nil) then return end
 	if (blackout.strength >= 3) then
@@ -141,7 +143,8 @@ local heartBPMTable = {0}
 
 function GM:CalculatePracticalHeartBPM(ply)
 	heartBPMTable[1] = ply.heartBPM
-	self:ModifyPracticalHeartBPM(ply,heartBPMTable)
+	gamemode.Call("ModifyPracticalHeartBPMAdditive",ply,heartBPMTable)
+	gamemode.Call("ModifyPracticalHeartBPM",ply,heartBPMTable)
 	return heartBPMTable[1]
 end
 

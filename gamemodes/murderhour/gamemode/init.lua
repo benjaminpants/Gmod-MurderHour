@@ -115,8 +115,8 @@ function GM:PlayerSpawn(ply)
 	ply.bladder = 0
 	ply:SetHunger(100)
 	ply:AddInventory(3, {ply}, false)
-	local suitCase = ply:ForceGive("weapon_murdh_suitcase")
-	suitCase:AssignInvOwner(ply)
+	--[[local suitCase = ply:ForceGive("weapon_murdh_suitcase")
+	suitCase:AssignInvOwner(ply)]]
 end
 
 include("systems/sv_heartbeat.lua")
@@ -126,7 +126,7 @@ function GM:HandleStatuses(ply)
 	if (not ply:Alive()) then return end
 	if (ply.statuses == nil) then return end
 	for i, status in ipairs(ply.statuses) do
-		local result = self:CallStatusEffectFunction(ply, status, "OnTick")
+		local result = gamemode.Call("CallStatusEffectFunction",ply, status, "OnTick")
 		if (result == nil) then
 			result = ENUM_STATE_RETURN_CONTINUE
 		end
@@ -150,7 +150,9 @@ end
 function GM:Tick()
 	for _, ply in player.Iterator() do
 		
-		self:HandleStatuses(ply)
+		if (SERVER) then
+			gamemode.Call("HandleStatuses",ply)
+		end
 		
 		// handle ladder climbing
 		if (ply:IsSprinting()) then
@@ -162,15 +164,27 @@ function GM:Tick()
 				ply:SetLadderClimbSpeed(ply:GetWalkSpeed())
 			end
 		end
-		if (not self:PlayerCanClimbLadder(ply)) then
+		if (not gamemode.Call("PlayerCanClimbLadder", ply)) then
 			ply:SetLadderClimbSpeed(0)
 			ply:ExitLadder()
 		end
-		// dirty hack. remove
+		-- dirty hack. remove
 		if (ply:HasStatusEffect("exhausted")) then
 			ply:SetJumpPower(100)
 		else
 			ply:SetJumpPower(200)
+		end
+
+		-- ANOTHER DIRTY HACK REMOVE!
+		local practicalHeartBPM = gamemode.Call("CalculatePracticalHeartBPM", ply)
+		if (practicalHeartBPM >= 105) then
+			if (practicalHeartBPM >= 115) then
+				ply:SetRunSpeed(300)
+			else
+				ply:SetRunSpeed(250)
+			end
+		else
+			ply:SetRunSpeed(200)
 		end
 		self:PlayerPostMainTick(ply)
 	end
@@ -187,6 +201,7 @@ local playerStatTab = {
 	WalkSpeed = 100,
 	SlowWalkSpeed = 70,
 	RunSpeed = 200,
+	JumpPower = 200,
 	CanSprint = true
 }
 
@@ -205,7 +220,7 @@ function GM:PlayerPostMainTick(ply)
 	if (ply.ragdolled) then
 		ply:SetPos(ply:GetNWEntity("PlayerCorpse"):GetPos())
 	end
-	self:HandleHeartbeat(ply)
+	gamemode.Call("HandleHeartbeat",ply)
 	if (ply:Alive()) then
 		ply:AddHunger(-FrameTime() / 8)
 		ply:AddBladder(FrameTime() * (((ply:GetHunger() + ply:GetThirst()) / 200) / 3))
@@ -234,9 +249,15 @@ function GM:EntityTakeDamage(entity, info)
 	end
 	if (not entity:IsPlayer()) then return false end
 	if (info:IsDamageType(DMG_DROWNRECOVER)) then return true end // no drown recovery
+
+	local shouldGetScared = (not info:IsDamageType(DMG_DIRECT)) and (not info:IsDamageType(DMG_FALL))
+
 	if (not info:IsDamageType(DMG_DIRECT)) then
-		entity.heartBPM = entity.heartBPM + math.max(info:GetDamage() * 3,10)
-		entity.heartBPM = math.min(entity.heartBPM, ((entity.restingBPM * 3)) - 30)
+		if (shouldGetScared) then
+			entity.heartBPM = entity.heartBPM + math.floor(info:GetDamage() / 4)
+		else
+			entity.heartBPM = entity.heartBPM + (info:GetDamage())
+		end
 	end
 	local chanceThreshold = math.max(math.floor(info:GetDamage()*2),20)
 	if (info:IsDamageType(DMG_FALL)) then
@@ -270,15 +291,35 @@ function GM:EntityTakeDamage(entity, info)
 			entity:AddOrUpdateStatusEffect("blackout", math.min(info:GetDamage()*3,75), 2)
 		end
 	end
-	if (not entity.supressDamageSound) then
-		if ((info:GetDamage() >= 25) or (entity:Health() <= 25)) then
+
+	if ((info:GetDamage() >= 25) or (entity:Health() <= 25)) then
+		if (not entity.supressDamageSound) then
 			self:PlayBigPainForPlayer(entity)
-		else
-			self:PlaySmallPainForPlayer(entity)
+		end
+		if (shouldGetScared) then
+			entity:AddOrUpdateStatusEffect("scared", info:GetDamage() + 10, 3)
+			if ((entity:Health() - info:GetDamage()) <= 5) then
+				entity:AddOrUpdateStatusEffect("scared", 60, 4)
+			end
 		end
 	else
-		entity.supressDamageSound = false
+		if (not entity.supressDamageSound) then
+			self:PlaySmallPainForPlayer(entity)
+		end
+		if (shouldGetScared) then
+			if (info:GetDamage() < 7) then
+				entity:AddOrUpdateStatusEffect("scared", 5, 1)
+			else
+				if ((entity:Health() <= 30)) then
+					entity:AddOrUpdateStatusEffect("scared", info:GetDamage() * 1.5, 3)
+				else
+					entity:AddOrUpdateStatusEffect("scared", info:GetDamage() * 1.5, 2)
+				end
+			end
+		end
 	end
+
+	entity.supressDamageSound = false
 	return false
 end
 
@@ -288,7 +329,7 @@ end
 
 function GM:ScalePlayerDamage(ply, hitgroup, info)
 	if (hitgroup == HITGROUP_HEAD) then
-		info:ScaleDamage(1.4)
+		info:ScaleDamage(1.7)
 		ply:AddOrUpdateStatusEffect("bleed_spurt",11,3)
 	end
 	local hitLeg = false

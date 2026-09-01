@@ -1,6 +1,6 @@
 hook.Add("SetupMove", "MHSmellyMove", function(ply, mv, cmd)
 	if (ply:HasStatusEffect("smelly")) then
-		mv:SetMaxClientSpeed(mv:GetMaxClientSpeed() * 0.65)
+		mv:SetMaxClientSpeed(mv:GetMaxClientSpeed() * 0.6)
 	end
 end)
 

@@ -6,6 +6,20 @@ if (CLIENT) then
 	end)
 end
 
+hook.Add("ModifyPracticalHeartBPMAdditive", "MHDrunkModifyBPM", function(ply, result)
+	result[1] = result[1] - (ply:GetStatusStrength("drunk") * 11)
+end)
+
+hook.Add("SetupMove", "MHDrunkMove", function(ply, mv, cmd)
+	if (ply:GetStatusStrength("drunk") > 0) then
+		local drunkStrength = ply:GetStatusStrength("drunk")
+		local angles = mv:GetMoveAngles()
+		local sinPart = math.sin(CurTime() * 1)
+		angles.yaw = angles.yaw + (math.sin(CurTime() + math.sin(CurTime()/10)) * (math.pow(drunkStrength,math.min(drunkStrength,3)) + 1))
+		mv:SetMoveAngles(angles)
+	end
+end)
+
 return {
 	drunk = {
 		timed=true,
