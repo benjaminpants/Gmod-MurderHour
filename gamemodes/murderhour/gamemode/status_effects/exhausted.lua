@@ -36,7 +36,11 @@ return {
 				effectData.highest_seen = playerBPM
 			end
 			local restingBPM = CalculateMinExhaustEnd(ply)
-			effectData.time = math.max(playerBPM - restingBPM, 0) / (effectData.highest_seen - restingBPM)
+			if (restingBPM == (exhaustBPM:GetInt() - 1)) then
+				effectData.time = 1
+			else
+				effectData.time = math.max(playerBPM - restingBPM, 0) / (effectData.highest_seen - restingBPM)
+			end
 			if ((playerBPM <= restingBPM)) then
 				return ENUM_STATE_RETURN_STOP
 			end

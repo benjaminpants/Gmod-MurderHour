@@ -150,8 +150,18 @@ end
 function GM:Tick()
 	for _, ply in player.Iterator() do
 		
-		if (SERVER) then
-			gamemode.Call("HandleStatuses",ply)
+		gamemode.Call("HandleStatuses",ply)
+
+		-- ANOTHER DIRTY HACK REMOVE!
+		local practicalHeartBPM = gamemode.Call("CalculatePracticalHeartBPM", ply)
+		if (practicalHeartBPM >= 105) then
+			if (practicalHeartBPM >= 115) then
+				ply:SetRunSpeed(300)
+			else
+				ply:SetRunSpeed(250)
+			end
+		else
+			ply:SetRunSpeed(200)
 		end
 		
 		// handle ladder climbing
@@ -175,17 +185,6 @@ function GM:Tick()
 			ply:SetJumpPower(200)
 		end
 
-		-- ANOTHER DIRTY HACK REMOVE!
-		local practicalHeartBPM = gamemode.Call("CalculatePracticalHeartBPM", ply)
-		if (practicalHeartBPM >= 105) then
-			if (practicalHeartBPM >= 115) then
-				ply:SetRunSpeed(300)
-			else
-				ply:SetRunSpeed(250)
-			end
-		else
-			ply:SetRunSpeed(200)
-		end
 		self:PlayerPostMainTick(ply)
 	end
 
