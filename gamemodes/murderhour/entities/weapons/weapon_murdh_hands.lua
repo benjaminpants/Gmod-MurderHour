@@ -42,6 +42,7 @@ function SWEP:SetupDataTables()
 	self:NetworkVar("Float", "NextIdle")
 	self:NetworkVar("Bool", "LastWasRight")
 	self:NetworkVar("Float", "NextMeleeAttack" )
+	self:NetworkVar("Entity", "RestrainedPlayer")
 	self.LastTimePassed = 0
 	self.lastChargeLevel = 0
 end
@@ -84,6 +85,38 @@ end
 
 function SWEP:SecondaryAttack()
 	self:CancelCharge(false)
+	--[[if (self:GetAttackStance()) then return end
+	if (owner:HasStatusEffect("exhausted")) then return end
+	if (not SERVER) then return end
+
+	-- attempt to find valid restrain target
+	local tr = util.TraceLine( {
+		start = owner:GetShootPos(),
+		endpos = owner:GetShootPos() + owner:GetAimVector() * 32,
+		filter = owner,
+		mask = MASK_SHOT_HULL
+	})
+	if (not IsValid(tr.Entity)) then return end
+	if (not tr.Entity:IsPlayer()) then return end
+	local ply = tr.Entity
+	local restrainedStrength = ply:GetStatusStrength("restrained")
+	if (restrainedStrength >= 2) then return end
+	ply:AddOrUpdateStatusEffect("restrained", -1, restrainedStrength + 1)
+	self:SetRestrainedPlayer(ply)
+	if (ply:GetActiveWeapon().GoesInInventory) then
+		ply:DropWeapon(ply:GetActiveWeapon())
+		return
+	end]]
+end
+
+function SWEP:TryToggleStance()
+	if (IsValid(self:GetRestrainedPlayer())) then return false end
+	return BaseClass.TryToggleStance(self)
+end
+
+function SWEP:CanBeHolstered()
+	if (IsValid(self:GetRestrainedPlayer())) then return false end
+	return BaseClass.CanBeHolstered(self)
 end
 
 function SWEP:GetViewModelPosition(pos, ang)
@@ -251,6 +284,16 @@ end
 
 function SWEP:Think()
 	BaseClass.Think(self)
+	if (IsValid(self:GetRestrainedPlayer())) then
+		local restrainedPlayer = self:GetRestrainedPlayer()
+		if (restrainedPlayer:GetPos():Distance(self:GetOwner():GetPos()) > 64) then
+			restrainedPlayer:RemoveAllStatusEffectWithID("restrained")
+			self:SetRestrainedPlayer(NULL)
+		elseif (not restrainedPlayer:HasStatusEffect("restrained")) then
+			self:SetRestrainedPlayer(NULL)
+		end
+		return
+	end
 	local curTime = CurTime()
 	local attackStance = self:GetAttackStance()
 	if (curTime > self:GetNextIdle()) then
