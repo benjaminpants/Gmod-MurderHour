@@ -308,15 +308,15 @@ function GM:EntityTakeDamage(entity, info)
 		if (shouldGetScared) then
 			if (info:GetDamage() < 7) then
 				if (not entity:HasStatusEffect("scared")) then
-					entity:AddOrUpdateStatusEffect("scared", 7, 1)
+					entity:AddOrUpdateStatusEffect("scared", 14, 1)
 				else
-					entity:AddOrUpdateStatusEffect("scared", 14, 2)
+					entity:AddOrUpdateStatusEffect("scared", 30, 2)
 				end
 			else
 				if ((entity:Health() <= 30)) then
-					entity:AddOrUpdateStatusEffect("scared", info:GetDamage() * 1.5, 3)
+					entity:AddOrUpdateStatusEffect("scared", info:GetDamage() * 3, 3)
 				else
-					entity:AddOrUpdateStatusEffect("scared", info:GetDamage() * 1.5, 2)
+					entity:AddOrUpdateStatusEffect("scared", info:GetDamage() * 3, 2)
 				end
 			end
 		end

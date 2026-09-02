@@ -40,7 +40,7 @@ function playerMeta:StartConnectedActionBarWith(otherPly, title, otherTitle, fin
 		finishedcallback(ply, otherPly, finished)
 	end)
 	self.actionBar.connectedId = connectedId
-	otherPly:StartActionBar(otherTitle, finishTime, true, function(ply)
+	otherPly:StartActionBar(otherTitle, finishTime + 0.015, true, function(ply)
 		return true
 	end, function(ply, finished)
 		-- do nothing
